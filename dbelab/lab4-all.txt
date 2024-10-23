@@ -1,0 +1,314 @@
+Now using Node v20.12.0 (npm 10.5.0) ~/.local/share/nvm/v20.12.0/bin/node
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+
+ayush@fedora ~ 
+❯ sudo mysql -u root -p                                                                                         09:12:05
+[sudo] password for ayush: 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.31 Source distribution
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| learning           |
+| mysql              |
+| performance_schema |
+| sys                |
+| university         |
++--------------------+
+6 rows in set (0.01 sec)
+
+mysql> use university;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++----------------------+
+| Tables_in_university |
++----------------------+
+| client_master        |
+| product_master       |
++----------------------+
+2 rows in set (0.01 sec)
+
+mysql> describe client_master;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| client_no | varchar(6)    | YES  |     | NULL    |       |
+| name      | varchar(20)   | YES  |     | NULL    |       |
+| city      | varchar(15)   | YES  |     | NULL    |       |
+| state     | varchar(15)   | YES  |     | NULL    |       |
+| pincode   | int           | YES  |     | NULL    |       |
+| bal_due   | decimal(10,2) | YES  |     | NULL    |       |
++-----------+---------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> describe product_master;
++------------------+---------------+------+-----+---------+-------+
+| Field            | Type          | Null | Key | Default | Extra |
++------------------+---------------+------+-----+---------+-------+
+| product_no       | varchar(8)    | YES  |     | NULL    |       |
+| description      | varchar(20)   | YES  |     | NULL    |       |
+| profit_percent   | decimal(4,2)  | YES  |     | NULL    |       |
+| unit_measure     | varchar(4)    | YES  |     | NULL    |       |
+| quantity_on_hand | int           | YES  |     | NULL    |       |
+| reorder          | varchar(4)    | YES  |     | NULL    |       |
+| sellprice        | decimal(10,2) | YES  |     | NULL    |       |
+| costprice        | decimal(10,2) | YES  |     | NULL    |       |
++------------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> select * from product_master;
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| product_no | description   | profit_percent | unit_measure | quantity_on_hand | reorder | sellprice | costprice |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| p00001     | 1.44 Floppies |           5.00 | 4            |              100 | 20      |   1150.00 |    500.00 |
+| p03453     | Monitors      |           6.00 | 3            |               10 | 3       |  12000.00 |  11200.00 |
+| p06734     | Mouse         |           5.00 | 9            |               20 | 5       |   1015.00 |    500.00 |
+| p07865     | 1.22 Floppies |           5.00 | 12           |              100 | 20      |    525.00 |    500.00 |
+| p07868     | Keyboards     |           2.00 | 10           |               10 | 3       |   3150.00 |   3050.00 |
+| p07885     | CD Drive      |           2.50 | 8            |               10 | 3       |   5250.00 |   5100.00 |
+| p07965     | 540 HDD       |           4.00 | 7            |               10 | 3       |   8400.00 |   8000.00 |
+| p07975     | 1.44 Drive    |           5.00 | 20           |               10 | 3       |   1050.00 |   1000.00 |
+| p08865     | 1.22 Drive    |           5.00 | 21           |                2 | 3       |   1050.00 |   1000.00 |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+9 rows in set (0.02 sec)
+
+mysql> select * from client_master;
++-----------+---------+--------+-------------+---------+---------+
+| client_no | name    | city   | state       | pincode | bal_due |
++-----------+---------+--------+-------------+---------+---------+
+| 0001      | Ivan    | Bombay | Tamil Nadu  |  768003 | 1000.00 |
+| 0003      | Pramada | Bombay | Maharashtra |  400057 | 5000.00 |
+| 0004      | Basu    | Bombay | Maharashtra |  400056 |    0.00 |
+| 0005      | Ravi    | Bombay | NULL        |  100001 | 2000.00 |
+| 0006      | Rukmini | Bombay | Maharashtra |  400050 |    0.00 |
++-----------+---------+--------+-------------+---------+---------+
+5 rows in set (0.01 sec)
+
+mysql> create table sales_master (salesman_no varchar(6) primary key constraint(start_s) check salesman_no like '5%');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(start_s) check salesman_no like '5%')' at line 1
+mysql> create table sales_master (salesman_no varchar(6) primary key check salesman_no like '5%');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'salesman_no like '5%')' at line 1
+mysql> create table sales_master (salesman_no varchar(6) primary key constraint (salesman_no) check salesman_no like '5%
+');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(salesman_no) check salesman_no like '5%')' at line 1
+mysql> create table sales_master (salesman_no varchar(6) primary key constraint(salesman_no) check salesman_no like '5%');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(salesman_no) check salesman_no like '5%')' at line 1
+mysql> create table sales_master (salesman_no varchar(6) primary key constraint check salesman_no like '5%');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'salesman_no like '5%')' at line 1
+mysql> create table sales_master (salesman_no varchar(6) primary key constraint 'start with s' check salesman_no like '5
+%');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''start with s' check salesman_no like '5%')' at line 1
+mysql> create table sales_master (salesman_no varchar(6) primary key constraint(salesman_no) check (salesman_no like '5%'));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(salesman_no) check (salesman_no like '5%'))' at line 1
+mysql> create table sales_master (salesman_no varchar(6) primary key constraint(salesmancheck) check (salesman_no like '5%'));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(salesmancheck) check (salesman_no like '5%'))' at line 1
+mysql> create table sales_master (salesman_no varchar(6) primary key constraint salesman_no check (salesman_no like '5%'));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> describe sales_master;
++-------------+------------+------+-----+---------+-------+
+| Field       | Type       | Null | Key | Default | Extra |
++-------------+------------+------+-----+---------+-------+
+| salesman_no | varchar(6) | NO   | PRI | NULL    |       |
++-------------+------------+------+-----+---------+-------+
+1 row in set (0.00 sec)
+
+mysql> insert into sales_master values ('4001');
+ERROR 3819 (HY000): Check constraint 'salesman_no' is violated.
+mysql> insert into sales_master values ('5005');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from sales_master;
++-------------+
+| salesman_no |
++-------------+
+| 5005        |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> drop sales_master;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sales_master' at line 1
+mysql> drop table sales_master;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table sales_master (
+    -> salesman_no varchar(6) primary key,
+    -> sales_name varchar(20) not null,
+    -> address varchar(20) not null,
+    -> city varchar(20),
+    -> state varchar(20),
+    -> pincode integer(6),
+    -> sales_amount decimal(8, 2) not null,
+    -> target_to_get decimal(6, 2) not null,
+    -> sales decimal(6, 2) not null,
+    -> remarks varchar(30),
+    -> constraint salesman_check check (salesman_no like '5%'),
+    -> constraint sales_check check (sales_amount <> 0),
+    -> constraint target_check (target_to_get <> 0),
+    -> constraint sales_constraint (sales <> 0));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(target_to_get <> 0),
+constraint sales_constraint (sales <> 0))' at line 14
+mysql> 
+
+create table sales_master ( 
+    salesman_no varchar(6) primary key, 
+    sales_name varchar(20) not null, 
+    address varchar(20) not null, 
+    city varchar(20), 
+    state varchar(20), 
+    pincode integer(6), 
+    sales_amount decimal(8, 2) not null, 
+    target_to_get decimal(6, 2) not null, 
+    sales decimal(6, 2) not null, 
+    remarks varchar(30), 
+    constraint salesman_check check (salesman_no like '5%'), 
+    constraint sales_check check (sales_amount <> 0), 
+    constraint target_check check (target_to_get <> 0), 
+    constraint sales_constraint check (sales <> 0));
+
+
+Query OK, 0 rows affected, 1 warning (0.06 sec)
+
+mysql> describe sales_master;
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| salesman_no   | varchar(6)   | NO   | PRI | NULL    |       |
+| sales_name    | varchar(20)  | NO   |     | NULL    |       |
+| address       | varchar(20)  | NO   |     | NULL    |       |
+| city          | varchar(20)  | YES  |     | NULL    |       |
+| state         | varchar(20)  | YES  |     | NULL    |       |
+| pincode       | int          | YES  |     | NULL    |       |
+| sales_amount  | decimal(8,2) | NO   |     | NULL    |       |
+| target_to_get | decimal(6,2) | NO   |     | NULL    |       |
+| sales         | decimal(6,2) | NO   |     | NULL    |       |
+| remarks       | varchar(30)  | YES  |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> insert into sales_master values ('500001', 'Kiran', 'A/14 Worli', 'Bombay', 'Maharashtra', 400002, 3000, 100, 50, 'Good'), ('500002', 'Manish', '65, Marine', 'Bombay', 'Maharashtra', 400001, 3000, 200, 100, 'Good');
+Query OK, 2 rows affected (0.03 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from sales_master;
++-------------+------------+------------+--------+-------------+---------+--------------+---------------+--------+---------+
+| salesman_no | sales_name | address    | city   | state       | pincode | sales_amount | target_to_get | sales  | remarks |
++-------------+------------+------------+--------+-------------+---------+--------------+---------------+--------+---------+
+| 500001      | Kiran      | A/14 Worli | Bombay | Maharashtra |  400002 |      3000.00 |        100.00 |  50.00 | Good    |
+| 500002      | Manish     | 65, Marine | Bombay | Maharashtra |  400001 |      3000.00 |        200.00 | 100.00 | Good    |
++-------------+------------+------------+--------+-------------+---------+--------------+---------------+--------+---------+
+2 rows in set (0.00 sec)
+
+mysql> insert into sales_master values ('400001', 'Kiran', 'A/14 Worli', 'Bombay', 'Maharashtra', 400002, 3000, 100, 50, 'Good')
+    -> ;
+ERROR 3819 (HY000): Check constraint 'salesman_check' is violated.
+mysql> insert into sales_master values ('500003', 'Ravi', 'P-7 Bandra', 'Bombay', 'Maharashtra', 400032, 3000, 200, 100, 'Good'), ('500004', 'Ashish', 'A/5 Juhu', 'Bombay', 'Maharashtra', 400044, 3500, 200, 150, 'Good');
+Query OK, 2 rows affected (0.02 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from sales_master;
++-------------+------------+------------+--------+-------------+---------+--------------+---------------+--------+---------+
+| salesman_no | sales_name | address    | city   | state       | pincode | sales_amount | target_to_get | sales  | remarks |
++-------------+------------+------------+--------+-------------+---------+--------------+---------------+--------+---------+
+| 500001      | Kiran      | A/14 Worli | Bombay | Maharashtra |  400002 |      3000.00 |        100.00 |  50.00 | Good    |
+| 500002      | Manish     | 65, Marine | Bombay | Maharashtra |  400001 |      3000.00 |        200.00 | 100.00 | Good    |
+| 500003      | Ravi       | P-7 Bandra | Bombay | Maharashtra |  400032 |      3000.00 |        200.00 | 100.00 | Good    |
+| 500004      | Ashish     | A/5 Juhu   | Bombay | Maharashtra |  400044 |      3500.00 |        200.00 | 150.00 | Good    |
++-------------+------------+------------+--------+-------------+---------+--------------+---------------+--------+---------+
+4 rows in set (0.00 sec)
+
+mysql> create table sales_order (
+    -> order_no varchar(6) primary_key,
+    -> order_date date,
+    -> client_no varchar(6) foreign key references client_master (client_no),
+    -> dely_add varchar(25),
+    -> salesman_no varchar(6) foreign key references sales_master (salesman_no),
+    -> delivery_type varchar(10) default 'F',
+    -> billed_yn varchar(20),
+    -> delivery_date date,
+    -> order_status varchar(10),
+    -> contstraint order_no_check check (order_no like '0%'),
+    -> constraint delivery_check check (delivery_type = 'P' or delivery_type = 'F'),
+    -> constraint delivery_date_check check (delivery_date >= order_date));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primary_key,
+order_date date,
+client_no varchar(6) foreign key references client' at line 2
+mysql> create table sales_order ( order_no varchar(6) primary key, order_date date, client_no varchar(6) foreign key references client_master (client_no), dely_add varchar(25), salesman_no varchar(6) foreign key references sales_master (salesman_no), delivery_type varchar(10) default 'F', billed_yn varchar(20), delivery_date date, order_status varchar(10), constraint order_no_check check (order_no like '0%'), constraint delivery_check check (delivery_type = 'P' or delivery_type = 'F'), constraint delivery_date_check check (delivery_date >= order_date));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'foreign key references client_master (client_no), dely_add varchar(25), salesman' at line 1
+mysql> create table sales_order ( order_no varchar(6) primary key, order_date date, client_no varchar(6), dely_add varchar(25), salesman_no varchar(6), delivery_type varchar(10) default 'F', billed_yn varchar(20), delivery_date date, order_status varchar(10), constraint order_no_check check (order_no like '0%'), constraint delivery_check check (delivery_type = 'P' or delivery_type = 'F'), constraint delivery_date_check check (delivery_date >= order_date), foreign key (client_no) references client_master (client_no), foreign key (salesman_no) references sales_master (salesman_no));
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'sales_order_ibfk_1' in the referenced table 'client_master'
+mysql> create table sales_order ( order_no varchar(6) primary key, order_date date, client_no varchar(6), foreign key (client_no) references client_master (client_no),^Cely_add varchar(25),
+mysql> n_no varchar(6) foreign key references sales_master (salesman_no), delivery_type varchar(10) default 'F', billed_yn varchar(20), delivery_date date, order_status varchar(10), constrai
+mysql> r_no_check check (order_no like '0%'), constraint delivery_check check (delivery_type = 'P' or delivery_type = 'F'), constraint delivery_date_check check (delivery_date >= order_date)mysql> 
+mysql> 
+mysql> alter table client_master add primary key (client_no);
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe client_master;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| client_no | varchar(6)    | NO   | PRI | NULL    |       |
+| name      | varchar(20)   | YES  |     | NULL    |       |
+| city      | varchar(15)   | YES  |     | NULL    |       |
+| state     | varchar(15)   | YES  |     | NULL    |       |
+| pincode   | int           | YES  |     | NULL    |       |
+| bal_due   | decimal(10,2) | YES  |     | NULL    |       |
++-----------+---------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> create table sales_order ( order_no varchar(6) primary key, order_date date, client_no varchar(6), dely_add varchar(25), salesman_no varchar(6), delivery_type varchar(10) default 'F', billed_yn varchar(20), delivery_date date, order_status varchar(10), constraint order_no_check check (order_no like '0%'), constraint delivery_check check (delivery_type = 'P' or delivery_type = 'F'), constraint delivery_date_check check (delivery_date >= order_date), foreign key (client_no) references client_master (client_no), foreign key (salesman_no) references sales_master (salesman_no));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> describe sales_order;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| order_no      | varchar(6)  | NO   | PRI | NULL    |       |
+| order_date    | date        | YES  |     | NULL    |       |
+| client_no     | varchar(6)  | YES  | MUL | NULL    |       |
+| dely_add      | varchar(25) | YES  |     | NULL    |       |
+| salesman_no   | varchar(6)  | YES  | MUL | NULL    |       |
+| delivery_type | varchar(10) | YES  |     | F       |       |
+| billed_yn     | varchar(20) | YES  |     | NULL    |       |
+| delivery_date | date        | YES  |     | NULL    |       |
+| order_status  | varchar(10) | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+9 rows in set (0.00 sec)
+
+mysql> insert into sales_order values ('019001', '12-Jan-96', '0001', 'A2 Borivali', '500001', 'F', 'N', '20-Jan-96', 'IP');
+ERROR 1292 (22007): Incorrect date value: '12-Jan-96' for column 'order_date' at row 1
+mysql> insert into sales_order values ('019001', '12-Jan-1996', '0001', 'A2 Borivali', '500001', 'F', 'N', '20-Jan-96', 'IP');
+ERROR 1292 (22007): Incorrect date value: '12-Jan-1996' for column 'order_date' at row 1
+mysql> insert into sales_order values ('019001', '1996-01-12', '0001', 'A2 Borivali', '500001', 'F', 'N', '1996-01-20', 'IP');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sales_order values ('019002', '1996-01-25', '0002', 'Mud Island', '500002', 'P', 'N', '1996-01-27', 'C');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`university`.`sales_order`, CONSTRAINT `sales_order_ibfk_1` FOREIGN KEY (`client_no`) REFERENCES `client_master` (`client_no`))
+mysql> insert into sales_order values ('019002', '1996-01-25', '0006', 'Mud Island', '500002', 'P', 'N', '1996-01-27', 'C');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into sales_order values ('016865', '1996-02-18', '0003', 'Juhu', '500003', 'F', 'Y', '1996-02-20', 'F');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sales_order values ('019003', '1996-02-18^C '0003', 'Juhu', '500003', 'F', 'Y', '1996-02-20', 'F');
+mysql> 
+

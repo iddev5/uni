@@ -1,0 +1,1058 @@
+Now using Node v20.12.0 (npm 10.5.0) ~/.local/share/nvm/v20.12.0/bin/node
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+
+ayush@fedora ~ 
+❯ sudo mysql -u root -p                                        09:33:12
+[sudo] password for ayush: 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.31 Source distribution
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> =
+mysql> use university;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++----------------------+
+| Tables_in_university |
++----------------------+
+| challan_details      |
+| challan_header       |
+| client_master        |
+| product_master       |
+| sales_master         |
+| sales_order          |
++----------------------+
+6 rows in set (0.00 sec)
+
+mysql> describe sales_master;
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| salesman_no   | varchar(6)   | NO   | PRI | NULL    |       |
+| sales_name    | varchar(20)  | NO   |     | NULL    |       |
+| address       | varchar(20)  | NO   |     | NULL    |       |
+| city          | varchar(20)  | YES  |     | NULL    |       |
+| state         | varchar(20)  | YES  |     | NULL    |       |
+| pincode       | int          | YES  |     | NULL    |       |
+| sales_amount  | decimal(8,2) | NO   |     | NULL    |       |
+| target_to_get | decimal(6,2) | NO   |     | NULL    |       |
+| sales         | decimal(6,2) | NO   |     | NULL    |       |
+| remarks       | varchar(30)  | YES  |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+10 rows in set (0.01 sec)
+
+mysql> describe sales_order;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| order_no      | varchar(6)  | NO   | PRI | NULL    |       |
+| order_date    | date        | YES  |     | NULL    |       |
+| client_no     | varchar(6)  | YES  | MUL | NULL    |       |
+| dely_add      | varchar(25) | YES  |     | NULL    |       |
+| salesman_no   | varchar(6)  | YES  | MUL | NULL    |       |
+| delivery_type | varchar(10) | YES  |     | F       |       |
+| billed_yn     | varchar(20) | YES  |     | NULL    |       |
+| delivery_date | date        | YES  |     | NULL    |       |
+| order_status  | varchar(10) | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+9 rows in set (0.00 sec)
+
+mysql> describe challan_header;
++--------------+------------+------+-----+---------+-------+
+| Field        | Type       | Null | Key | Default | Extra |
++--------------+------------+------+-----+---------+-------+
+| challan_no   | varchar(6) | NO   | PRI | NULL    |       |
+| order_no     | varchar(6) | YES  | MUL | NULL    |       |
+| challan_date | date       | NO   |     | NULL    |       |
+| billed_yn    | char(1)    | YES  |     | N       |       |
++--------------+------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> describe challan_details;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| challan_no | varchar(6)   | NO   | PRI | NULL    |       |
+| product_no | varchar(6)   | YES  | MUL | NULL    |       |
+| qty_disp   | decimal(4,2) | NO   |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from sales_order inner join client_master on sales_order.client_no = client_master.client_no;
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+-----------+---------+--------+-------------+---------+---------+--------------+
+| order_no | order_date | client_no | dely_add    | salesman_no | delivery_type | billed_yn | delivery_date | order_status | client_no | name    | city   | state       | pincode | bal_due | phone_number |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+-----------+---------+--------+-------------+---------+---------+--------------+
+| 019001   | 1996-01-12 | 0001      | A2 Borivali | 500001      | F             | N         | 1996-01-20    | IP           | 0001      | Ivan    | Bombay | Tamil Nadu  |  768003 | 1000.00 | NULL         |
+| 016865   | 1996-02-18 | 0003      | Juhu        | 500003      | F             | Y         | 1996-02-20    | F            | 0003      | Pramada | Bombay | Maharashtra |  400057 | 5000.00 | NULL         |
+| 010008   | 1996-05-24 | 0005      | XYZ-Colony  | 500004      | F             | N         | 1996-05-26    | IP           | 0005      | Ravi    | Bombay | NULL        |  100001 | 2000.00 | NULL         |
+| 019002   | 1996-01-25 | 0006      | Mud Island  | 500002      | P             | N         | 1996-01-27    | C            | 0006      | Rukmini | Bombay | Maharashtra |  400050 |    0.00 | NULL         |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+-----------+---------+--------+-------------+---------+---------+--------------+
+4 rows in set (0.02 sec)
+
+mysql> select order_no, product_no from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan
+_header on sales_order.order_no = challan_header.order_no;
+ERROR 1052 (23000): Column 'order_no' in field list is ambiguous
+mysql> select sales_order.order_no, product_no from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner
+join challa
+ERROR 1054 (42S22): Unknown column 'product_no' in 'field list'
+mysql> select sales_order.order_no, product_no from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner
+join challan_details on sales_order.order_no = challan_details.order_no;
+ERROR 1054 (42S22): Unknown column 'challan_details.order_no' in 'on clause'
+mysql> select sales_order.order_no, challan_no from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner
+join challan_header on sales_order.order_no = challan_header.order_no;
++----------+------------+
+| order_no | challan_no |
++----------+------------+
+| 010008   | CH3965     |
+| 016865   | CH6865     |
+| 019001   | CH9001     |
++----------+------------+
+3 rows in set (0.02 sec)
+
+mysql> select sales_order.order_no, challan_no from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner
+join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challa;
+ERROR 1052 (23000): Column 'challan_no' in field list is ambiguous
+mysql> select sales_order.order_no, challan_details.challan_no from sales_order inner join client_master on sales_order.client_no = client_master.
+client_no inne  alla
+ERROR 1054 (42S22): Unknown column 'challan_details.challa' in 'on clause'
+mysql> select sales_order.order_no, challan_details.challan_no from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challa
+ERROR 1054 (42S22): Unknown column 'challan_details.challa' in 'on clause'
+mysql> select sales_order.order_no, challan_details.challan_no from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no;
++----------+------------+
+| order_no | challan_no |
++----------+------------+
+| 019001   | CH9001     |
+| 016865   | CH6865     |
+| 010008   | CH3965     |
++----------+------------+
+3 rows in set (0.01 sec)
+
+mysql> select sales_order.order_no, challan_details.product_no from sales_order inner join client_master on sales_order.client_no = client_master.
+client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challa
++----------+------------+
+| order_no | product_no |
++----------+------------+
+| 019001   | p00001     |
+| 016865   | p07868     |
+| 010008   | p00001     |
++----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select sales_order.order_no, challan_details.product_no, product_master.description from sales_order inner join client_master on sales_orde
+r.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challa
+ERROR 1054 (42S22): Unknown column 'product_master.description' in 'field list'
+mysql> select sales_order.order_no, challan_details.product_no, product_master.description from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no;
++----------+------------+---------------+
+| order_no | product_no | description   |
++----------+------------+---------------+
+| 019001   | p00001     | 1.44 Floppies |
+| 016865   | p07868     | Keyboards     |
+| 010008   | p00001     | 1.44 Floppies |
++----------+------------+---------------+
+3 rows in set (0.02 sec)
+
+mysql> select distinct challan_details.product_no, product_master.description from sales_order inner join client_master on sales_order.client_no =
+ client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challa
++------------+---------------+
+| product_no | description   |
++------------+---------------+
+| p00001     | 1.44 Floppies |
+| p07868     | Keyboards     |
++------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> select challan_details.product_no, product_master.description from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no;
++------------+---------------+
+| product_no | description   |
++------------+---------------+
+| p00001     | 1.44 Floppies |
+| p07868     | Keyboards     |
+| p00001     | 1.44 Floppies |
++------------+---------------+
+3 rows in set (0.01 sec)
+
+mysql> select distinct challan_details.product_no, product_master.description from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no;
++------------+---------------+
+| product_no | description   |
++------------+---------------+
+| p00001     | 1.44 Floppies |
+| p07868     | Keyboards     |
++------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> select distinct challan_details.product_no, product_master.description from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no where client_master.name = "Ivan";
++------------+---------------+
+| product_no | description   |
++------------+---------------+
+| p00001     | 1.44 Floppies |
++------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> select * from sales_order
+    -> ;
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+| order_no | order_date | client_no | dely_add    | salesman_no | delivery_type | billed_yn | delivery_date | order_status |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+| 010008   | 1996-05-24 | 0005      | XYZ-Colony  | 500004      | F             | N         | 1996-05-26    | IP           |
+| 016865   | 1996-02-18 | 0003      | Juhu        | 500003      | F             | Y         | 1996-02-20    | F            |
+| 019001   | 1996-01-12 | 0001      | A2 Borivali | 500001      | F             | N         | 1996-01-20    | IP           |
+| 019002   | 1996-01-25 | 0006      | Mud Island  | 500002      | P             | N         | 1996-01-27    | C            |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> select distinct challan_details.challan_no, challan_details.product_no, product_master.description from sales_order inner join client_maste
+r on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challa
+n_details on challa
+ct_no where client_master.name = "Ivan";
++------------+------------+---------------+
+| challan_no | product_no | description   |
++------------+------------+---------------+
+| CH9001     | p00001     | 1.44 Floppies |
++------------+------------+---------------+
+1 row in set (0.01 sec)
+
+mysql> select order_status, qty_disp from sales_order inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no;
++--------------+----------+
+| order_status | qty_disp |
++--------------+----------+
+| IP           |     5.00 |
+| F            |     3.00 |
+| IP           |     4.00 |
++--------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select order_status, qty_disp from sales_order inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product_no;
++--------------+----------+
+| order_status | qty_disp |
++--------------+----------+
+| IP           |     5.00 |
+| F            |     3.00 |
+| IP           |     4.00 |
++--------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select order_status, description, qty_disp from sales_order inner join challan_header on sales_order.order_no = challan_header.order_no inn
+er join challa
+_details.product_no;
++--------------+---------------+----------+
+| order_status | description   | qty_disp |
++--------------+---------------+----------+
+| IP           | 1.44 Floppies |     5.00 |
+| F            | Keyboards     |     3.00 |
+| IP           | 1.44 Floppies |     4.00 |
++--------------+---------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select description, qty_disp from sales_order inner join challan_header on sales_order.order_no = challan_header.order_no inner join challa                                                                  ails.product_no where order_status = "IP";
++---------------+----------+
+| description   | qty_disp |
++---------------+----------+
+| 1.44 Floppies |     5.00 |
+| 1.44 Floppies |     4.00 |
++---------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select description, qty_disp from sales_order inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product_no where order_status = "IP";
++---------------+----------+
+| description   | qty_disp |
++---------------+----------+
+| 1.44 Floppies |     5.00 |
+| 1.44 Floppies |     4.00 |
++---------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select description, qty_disp from sales_order inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product_no where order_status = "C";
+Empty set (0.00 sec)
+
+mysql> select description, qty_disp from sales_order inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product_no where order_status = "F";
++-------------+----------+
+| description | qty_disp |
++-------------+----------+
+| Keyboards   |     3.00 |
++-------------+----------+
+1 row in set (0.00 sec)
+
+mysql> select client_master.name from sales_order inner join client_master.client_no = sales_order.client_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= sales_order.client_no' at line 1
+mysql> select client_master.name from sales_order inner join client_master on client_master.client_no = sales_order.client_no;
++---------+
+| name    |
++---------+
+| Ivan    |
+| Pramada |
+| Ravi    |
+| Rukmini |
++---------+
+4 rows in set (0.00 sec)
+
+mysql> select client_master.name from sales_order inner join client_master on client_master.client_no = sales_order.client_no inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details.challan_no = challan_header.challan_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= challan_header.challan_no' at line 1
+mysql> select client_master.name from sales_order inner join client_master on client_master.client_no = sales_order.client_no inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no;
++---------+
+| name    |
++---------+
+| Ivan    |
+| Pramada |
+| Ravi    |
++---------+
+3 rows in set (0.00 sec)
+
+mysql> select client_master.name from sales_order inner join client_master on client_master.client_no = sales_order.client_no inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.challan_no;
+Empty set (0.00 sec)
+
+mysql> select client_master.name from sales_order inner join client_master on client_master.client_no = sales_order.client_no inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product__no;
+ERROR 1054 (42S22): Unknown column 'challan_details.product__no' in 'on clause'
+mysql> select client_master.name from sales_order inner join client_master on client_master.client_no = sales_order.client_no inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product_no;
++---------+
+| name    |
++---------+
+| Ivan    |
+| Pramada |
+| Ravi    |
++---------+
+3 rows in set (0.00 sec)
+
+mysql> select client_master.name, description from sales_order inner join client_master on client_master.client_no = sales_order.client_no inner j
+oin challa  lla
++---------+---------------+
+| name    | description   |
++---------+---------------+
+| Ivan    | 1.44 Floppies |
+| Pramada | Keyboards     |
+| Ravi    | 1.44 Floppies |
++---------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> select client_master.name, description from sales_order inner join client_master on client_master.client_no = sales_order.client_no inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product_no where description = "CD Drive";
+Empty set (0.00 sec)
+
+mysql> select distinct challan_details.challan_no, challan_details.product_no, product_master.description from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no where client_master.name in ("Ivan", "Vandan");
++------------+------------+---------------+
+| challan_no | product_no | description   |
++------------+------------+---------------+
+| CH9001     | p00001     | 1.44 Floppies |
++------------+------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> select distinct challan_details.challan_no, challan_details.product_no, product_master.description from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no where client_master.name in ("Ivan", "Vandana");
++------------+------------+---------------+
+| challan_no | product_no | description   |
++------------+------------+---------------+
+| CH9001     | p00001     | 1.44 Floppies |
++------------+------------+---------------+
+1 row in set (0.01 sec)
+
+mysql> select * from client_master;
++-----------+---------+--------+-------------+---------+---------+--------------+
+| client_no | name    | city   | state       | pincode | bal_due | phone_number |
++-----------+---------+--------+-------------+---------+---------+--------------+
+| 0001      | Ivan    | Bombay | Tamil Nadu  |  768003 | 1000.00 | NULL         |
+| 0003      | Pramada | Bombay | Maharashtra |  400057 | 5000.00 | NULL         |
+| 0004      | Basu    | Bombay | Maharashtra |  400056 |    0.00 | NULL         |
+| 0005      | Ravi    | Bombay | NULL        |  100001 | 2000.00 | NULL         |
+| 0006      | Rukmini | Bombay | Maharashtra |  400050 |    0.00 | NULL         |
++-----------+---------+--------+-------------+---------+---------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> select distinct challan_details.challan_no, challan_details.product_no, product_master.description from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no where client_master.name in ("Ivan", "Vandana");
++------------+------------+---------------+
+| challan_no | product_no | description   |
++------------+------------+---------------+
+| CH9001     | p00001     | 1.44 Floppies |
++------------+------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> select challan_details.product_no, product_master.description, challan_details.qty_disp from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details o
+n challa
+ client_master.name in ("Ivan", "Vandana");
++------------+---------------+----------+
+| product_no | description   | qty_disp |
++------------+---------------+----------+
+| p00001     | 1.44 Floppies |     4.00 |
++------------+---------------+----------+
+1 row in set (0.01 sec)
+
+mysql> select challan_details.product_no, product_master.description, challan_details.qty_disp from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no where client_master.name in ("C00001", "C00002");
+Empty set (0.00 sec)
+
+mysql> select challan_details.product_no, product_master.description, challan_details.qty_disp from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no where client_master.name in ("00001", "00002");
+Empty set (0.00 sec)
+
+mysql> select challan_details.product_no, product_master.description, challan_details.qty_disp from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no where client_master.name in ("0001", "0002");
+Empty set (0.00 sec)
+
+mysql> select challan_details.product_no, product_master.description, challan_details.qty_disp from sales_order inner join client_master on sales_order.client_no = client_master.client_no inner join challan_header on sales_order.order_no = challan_header.order_no inner join challan_details on challan_header.challan_no = challan_details.challan_no inner join product_master on product_master.product_no = challan_details.product_no where client_master.client_no in ("0001", "0002");
++------------+---------------+----------+
+| product_no | description   | qty_disp |
++------------+---------------+----------+
+| p00001     | 1.44 Floppies |     4.00 |
++------------+---------------+----------+
+1 row in set (0.00 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_university |
++----------------------+
+| challan_details      |
+| challan_header       |
+| client_master        |
+| product_master       |
+| sales_master         |
+| sales_order          |
++----------------------+
+6 rows in set (0.00 sec)
+
+mysql> select sales_order.order_no from sales_order inner join challan_header on challan_header.order_no = sales_order.order_no;
++----------+
+| order_no |
++----------+
+| 019001   |
+| 016865   |
+| 010008   |
++----------+
+3 rows in set (0.00 sec)
+
+mysql> select sales_order.order_no from sales_order inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no;
++----------+
+| order_no |
++----------+
+| 019001   |
+| 016865   |
+| 010008   |
++----------+
+3 rows in set (0.00 sec)
+
+mysql> select sales_order.order_no from sales_order inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product_no;
++----------+
+| order_no |
++----------+
+| 019001   |
+| 016865   |
+| 010008   |
++----------+
+3 rows in set (0.00 sec)
+
+mysql> select product_master.product_no, sales_order.order_no from sales_order inner join challan_header on challan_header.order_no = sales_order.
+order_no inne
+no = challa
++------------+----------+
+| product_no | order_no |
++------------+----------+
+| p00001     | 019001   |
+| p07868     | 016865   |
+| p00001     | 010008   |
++------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select product_master.product_no, sales_order.order_no, challan_details.qty_disp from sales_order inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master
+on product_master.product_no = challan_details.product_no;
++------------+----------+----------+
+| product_no | order_no | qty_disp |
++------------+----------+----------+
+| p00001     | 019001   |     4.00 |
+| p07868     | 016865   |     3.00 |
+| p00001     | 010008   |     5.00 |
++------------+----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select product_master.product_no, sales_order.order_no from sales_order inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product_no where challan_details.qty_disp < 5.0 and product_master.description = "1.44 Floppies";
++------------+----------+
+| product_no | order_no |
++------------+----------+
+| p00001     | 019001   |
++------------+----------+
+1 row in set (0.00 sec)
+
+mysql> select product_master.product_no, sales_order.order_no from sales_order inner join challan_header on challan_header.order_no = sales_order.order_no inner join challan_details on challan_details.challan_no = challan_header.challan_no inner join product_master on product_master.product_no = challan_details.product_no where challan_details.qty_disp < 5.0 an^C
+mysql> select sales_order.order_no, client_no from sales_order;
++----------+-----------+
+| order_no | client_no |
++----------+-----------+
+| 019001   | 0001      |
+| 016865   | 0003      |
+| 010008   | 0005      |
+| 019002   | 0006      |
++----------+-----------+
+4 rows in set (0.01 sec)
+
+mysql> select order_no, client_no from sales_order inner join sales_master;
++----------+-----------+
+| order_no | client_no |
++----------+-----------+
+| 019002   | 0006      |
+| 010008   | 0005      |
+| 016865   | 0003      |
+| 019001   | 0001      |
+| 019002   | 0006      |
+| 010008   | 0005      |
+| 016865   | 0003      |
+| 019001   | 0001      |
+| 019002   | 0006      |
+| 010008   | 0005      |
+| 016865   | 0003      |
+| 019001   | 0001      |
+| 019002   | 0006      |
+| 010008   | 0005      |
+| 016865   | 0003      |
+| 019001   | 0001      |
++----------+-----------+
+16 rows in set (0.02 sec)
+
+mysql> select order_no, client_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no;
++----------+-----------+
+| order_no | client_no |
++----------+-----------+
+| 010008   | 0005      |
+| 016865   | 0003      |
+| 019001   | 0001      |
+| 019002   | 0006      |
++----------+-----------+
+4 rows in set (0.01 sec)
+
+mysql> select order_no, client_no, salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no;
+ERROR 1052 (23000): Column 'salesman_no' in field list is ambiguous
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.sale
+sman_no;
++----------+-----------+-------------+
+| order_no | client_no | salesman_no |
++----------+-----------+-------------+
+| 010008   | 0005      | 500004      |
+| 016865   | 0003      | 500003      |
+| 019001   | 0001      | 500001      |
+| 019002   | 0006      | 500002      |
++----------+-----------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no where count(salesman_no) > 1;
+ERROR 1111 (HY000): Invalid use of group function
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no having count(salesman_no) > 1;
+ERROR 1052 (23000): Column 'salesman_no' in having clause is ambiguous
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no having count(sales_order.salesman_no) > 1;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'university.sales_order.order_no'; this is incompatible with sql_mode=only_full_group_by
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no having count(sales_order.salesman_no) > 1 group by order_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by order_no' at line 1
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by order_no having count(sales_order.salesman_no) > 1;
+Empty set (0.00 sec)
+
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no having count(sales_order.salesman_no) > 1;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.sales_order.order_no' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by order_no having count(sales_order.salesman_no) > 1;
+Empty set (0.00 sec)
+
+mysql> select * from sales_master;
++-------------+------------+------------+--------+-------------+---------+--------------+---------------+--------+---------+
+| salesman_no | sales_name | address    | city   | state       | pincode | sales_amount | target_to_get | sales  | remarks |
++-------------+------------+------------+--------+-------------+---------+--------------+---------------+--------+---------+
+| 500001      | Kiran      | A/14 Worli | Bombay | Maharashtra |  400002 |      3000.00 |        100.00 |  50.00 | Good    |
+| 500002      | Manish     | 65, Marine | Bombay | Maharashtra |  400001 |      3000.00 |        200.00 | 100.00 | Good    |
+| 500003      | Ravi       | P-7 Bandra | Bombay | Maharashtra |  400032 |      3000.00 |        200.00 | 100.00 | Good    |
+| 500004      | Ashish     | A/5 Juhu   | Bombay | Maharashtra |  400044 |      3500.00 |        200.00 | 150.00 | Good    |
++-------------+------------+------------+--------+-------------+---------+--------------+---------------+--------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select * from sales_order;
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+| order_no | order_date | client_no | dely_add    | salesman_no | delivery_type | billed_yn | delivery_date | order_status |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+| 010008   | 1996-05-24 | 0005      | XYZ-Colony  | 500004      | F             | N         | 1996-05-26    | IP           |
+| 016865   | 1996-02-18 | 0003      | Juhu        | 500003      | F             | Y         | 1996-02-20    | F            |
+| 019001   | 1996-01-12 | 0001      | A2 Borivali | 500001      | F             | N         | 1996-01-20    | IP           |
+| 019002   | 1996-01-25 | 0006      | Mud Island  | 500002      | P             | N         | 1996-01-27    | C            |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into sales_order values ('019003', '1996-04-03', '0001', 'ABC Lane', '500001', 'P', 'Y', '1996-04-07', 'F');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into sales_order values ('046866', '1996-05-20', '0004', 'MNO Road', '500002', 'P', 'N', '1996-05-22', 'C');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from sales_order;
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+| order_no | order_date | client_no | dely_add    | salesman_no | delivery_type | billed_yn | delivery_date | order_status |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+| 010008   | 1996-05-24 | 0005      | XYZ-Colony  | 500004      | F             | N         | 1996-05-26    | IP           |
+| 016865   | 1996-02-18 | 0003      | Juhu        | 500003      | F             | Y         | 1996-02-20    | F            |
+| 019001   | 1996-01-12 | 0001      | A2 Borivali | 500001      | F             | N         | 1996-01-20    | IP           |
+| 019002   | 1996-01-25 | 0006      | Mud Island  | 500002      | P             | N         | 1996-01-27    | C            |
+| 019003   | 1996-04-03 | 0001      | ABC Lane    | 500001      | P             | Y         | 1996-04-07    | F            |
+| 046866   | 1996-05-20 | 0004      | MNO Road    | 500002      | P             | N         | 1996-05-22    | C            |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+6 rows in set (0.00 sec)
+
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by order_no having count(sales_order.salesman_no) > 1;
+Empty set (0.00 sec)
+
+mysql> select order_no, client_no, sales_order.salesman_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by order_no;
++----------+-----------+-------------+
+| order_no | client_no | salesman_no |
++----------+-----------+-------------+
+| 019001   | 0001      | 500001      |
+| 019003   | 0001      | 500001      |
+| 019002   | 0006      | 500002      |
+| 046866   | 0004      | 500002      |
+| 016865   | 0003      | 500003      |
+| 010008   | 0005      | 500004      |
++----------+-----------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> select order_no, client_no, sales_order.salesman_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_maste
+r.salesman_no = sales_order.salesman_no group by order_no;
++----------+-----------+-------------+--------------------------------+
+| order_no | client_no | salesman_no | count(sales_order.salesman_no) |
++----------+-----------+-------------+--------------------------------+
+| 019001   | 0001      | 500001      |                              1 |
+| 019003   | 0001      | 500001      |                              1 |
+| 019002   | 0006      | 500002      |                              1 |
+| 046866   | 0004      | 500002      |                              1 |
+| 016865   | 0003      | 500003      |                              1 |
+| 010008   | 0005      | 500004      |                              1 |
++----------+-----------+-------------+--------------------------------+
+6 rows in set (0.00 sec)
+
+mysql> select order_no, client_no, sales_order.salesman_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.sales_order.order_no' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select client_no, order_no sales_order.salesman_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.salesman_no, count(sales_order.salesman_no) from sales_order inner join sales_m' at line 1
+mysql> select client_no, order_no, sales_order.salesman_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.sales_order.order_no' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select client_no, order_no, sales_order.salesman_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no, order_no;
++-----------+----------+-------------+--------------------------------+
+| client_no | order_no | salesman_no | count(sales_order.salesman_no) |
++-----------+----------+-------------+--------------------------------+
+| 0001      | 019001   | 500001      |                              1 |
+| 0001      | 019003   | 500001      |                              1 |
+| 0006      | 019002   | 500002      |                              1 |
+| 0004      | 046866   | 500002      |                              1 |
+| 0003      | 016865   | 500003      |                              1 |
+| 0005      | 010008   | 500004      |                              1 |
++-----------+----------+-------------+--------------------------------+
+6 rows in set (0.00 sec)
+
+mysql> select client_no, sales_order.salesman_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.sales_order.salesman_no' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select client_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no;
++-----------+--------------------------------+
+| client_no | count(sales_order.salesman_no) |
++-----------+--------------------------------+
+| 0001      |                              2 |
+| 0006      |                              1 |
+| 0004      |                              1 |
+| 0003      |                              1 |
+| 0005      |                              1 |
++-----------+--------------------------------+
+5 rows in set (0.00 sec)
+
+mysql> select distinct client_no, order_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no =
+sales_order.salesman_no group by client_no;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.sales_order.order_no' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select distinct client_no count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'count(sales_order.salesman_no) from sales_order inner join sales_master on sales' at line 1
+mysql> select distinct client_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no;
++-----------+--------------------------------+
+| client_no | count(sales_order.salesman_no) |
++-----------+--------------------------------+
+| 0001      |                              2 |
+| 0006      |                              1 |
+| 0004      |                              1 |
+| 0003      |                              1 |
+| 0005      |                              1 |
++-----------+--------------------------------+
+5 rows in set (0.00 sec)
+
+mysql> select distinct client_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no having count(sales_order.salesman_no) > 1;
++-----------+--------------------------------+
+| client_no | count(sales_order.salesman_no) |
++-----------+--------------------------------+
+| 0001      |                              2 |
++-----------+--------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select client_no, order_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_n
+o having count(sales_order.salesman_no) > 1;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.sales_order.order_no' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select client_no from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no having count(sales_order.salesman_no) > 1;
++-----------+
+| client_no |
++-----------+
+| 0001      |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select distinct client_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no
++-----------+--------------------------------+
+| client_no | count(sales_order.salesman_no) |
++-----------+--------------------------------+
+| 0001      |                              2 |
++-----------+--------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select client_no, count(sales_order.salesman_no) from sales_order inner join sales_master on sales_master.salesman_no = sales_order.salesman_no group by client_no having count(sales_order.salesman_no) > 1;
++-----------+--------------------------------+
+| client_no | count(sales_order.salesman_no) |
++-----------+--------------------------------+
+| 0001      |                              2 |
++-----------+--------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select delivery_date from sales_order;
++---------------+
+| delivery_date |
++---------------+
+| 1996-05-26    |
+| 1996-02-20    |
+| 1996-01-20    |
+| 1996-01-27    |
+| 1996-04-07    |
+| 1996-05-22    |
++---------------+
+6 rows in set (0.00 sec)
+
+mysql> select delivery_date "DD.MM.YYYY" from sales_order;
++------------+
+| DD.MM.YYYY |
++------------+
+| 1996-05-26 |
+| 1996-02-20 |
+| 1996-01-20 |
+| 1996-01-27 |
+| 1996-04-07 |
+| 1996-05-22 |
++------------+
+6 rows in set (0.00 sec)
+
+mysql> select date(delivery_date) from sales_order;
++---------------------+
+| date(delivery_date) |
++---------------------+
+| 1996-05-26          |
+| 1996-02-20          |
+| 1996-01-20          |
+| 1996-01-27          |
+| 1996-04-07          |
+| 1996-05-22          |
++---------------------+
+6 rows in set (0.00 sec)
+
+mysql> select date(delivery_date, "DD.MM.YY") from sales_order;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', "DD.MM.YY") from sales_order' at line 1
+mysql> select description, qty_disp from challan_details inner join product_master on product_master.product_no = challan_details.product_no;
++---------------+----------+
+| description   | qty_disp |
++---------------+----------+
+| 1.44 Floppies |     5.00 |
+| 1.44 Drive    |     2.00 |
+| Keyboards     |     3.00 |
+| Monitors      |     4.00 |
+| 1.44 Floppies |    10.00 |
+| 1.44 Floppies |     4.00 |
+| 540 HDD       |     1.00 |
+| CD Drive      |     1.00 |
++---------------+----------+
+8 rows in set (0.00 sec)
+
+mysql> select description, sum(qty_disp) from challan_details inner join
+ product_master on product_master.product_no = challan_details.product_n
+o;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'university.product_master.description'; this is incompatible with sql_mode=only_full_group_by
+mysql> select description, sum(qty_disp) from challan_details inner join product_master on product_master.product_no = challan_details.product_no group by description;
++---------------+---------------+
+| description   | sum(qty_disp) |
++---------------+---------------+
+| 1.44 Floppies |         19.00 |
+| 1.44 Drive    |          2.00 |
+| Keyboards     |          3.00 |
+| Monitors      |          4.00 |
+| 540 HDD       |          1.00 |
+| CD Drive      |          1.00 |
++---------------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> select description, sum(qty_disp) * sellprice from challan_detail
+s inne
+ls.product_no group by description;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.product_master.sellprice' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select description, qty_disp * sellprice from challan_details inner join product_master on product_master.product_no = challan_details.product_no group by description;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.challan_details.qty_disp' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select description, sellprice from challan_details inner join product_master on product_master.product_no = challan_details.product_no group by description;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.product_master.sellprice' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select description from challan_details inner join product_master on product_master.product_no = challan_details.product_no group by description;
++---------------+
+| description   |
++---------------+
+| 1.44 Floppies |
+| Monitors      |
+| Keyboards     |
+| CD Drive      |
+| 540 HDD       |
+| 1.44 Drive    |
++---------------+
+6 rows in set (0.00 sec)
+
+mysql> select sellprice from challan_details inner join product_master o
+n product_master.product_no = challan_details.product_no group by descri
+ption;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.product_master.sellprice' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select sellprice from challan_details inner join product_master on product_master.product_no = challan_details.product_no group by sellprice;
++-----------+
+| sellprice |
++-----------+
+|   1150.00 |
+|  12000.00 |
+|   3150.00 |
+|   5250.00 |
+|   8400.00 |
+|   1050.00 |
++-----------+
+6 rows in set (0.00 sec)
+
+mysql> select description, sellprice from challan_details inner join pro
+duct_master on product_master.product_no = challan_details.product_no;
++---------------+-----------+
+| description   | sellprice |
++---------------+-----------+
+| 1.44 Floppies |   1150.00 |
+| 1.44 Floppies |   1150.00 |
+| 1.44 Floppies |   1150.00 |
+| Monitors      |  12000.00 |
+| Keyboards     |   3150.00 |
+| CD Drive      |   5250.00 |
+| 540 HDD       |   8400.00 |
+| 1.44 Drive    |   1050.00 |
++---------------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> select description, sellprice * qty_disp from challan_details inn
+er join product_master on product_master.product_no = challan_details.product_no;
++---------------+----------------------+
+| description   | sellprice * qty_disp |
++---------------+----------------------+
+| 1.44 Floppies |            5750.0000 |
+| 1.44 Drive    |            2100.0000 |
+| Keyboards     |            9450.0000 |
+| Monitors      |           48000.0000 |
+| 1.44 Floppies |           11500.0000 |
+| 1.44 Floppies |            4600.0000 |
+| 540 HDD       |            8400.0000 |
+| CD Drive      |            5250.0000 |
++---------------+----------------------+
+8 rows in set (0.00 sec)
+
+mysql> select description, sum(sellprice * qty_disp) from challan_detail
+s inne
+ls.product_no;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'university.product_master.description'; this is incompatible with sql_mode=only_full_group_by
+mysql> select description, sum(sellprice * qty_disp) from challan_details inner join product_master on product_master.product_no = challan_details.product_no order by description;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'university.product_master.description'; this is incompatible with sql_mode=only_full_group_by
+mysql> select description, sum(sellprice * qty_disp) from challan_details inner join product_master on product_master.product_no = challan_details.product_no;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'university.product_master.description'; this is incompatible with sql_mode=only_full_group_by
+mysql> select description, sellprice * qty_disp from challan_details inner join product_master on product_master.product_no = challan_details.product_no;
++---------------+----------------------+
+| description   | sellprice * qty_disp |
++---------------+----------------------+
+| 1.44 Floppies |            5750.0000 |
+| 1.44 Drive    |            2100.0000 |
+| Keyboards     |            9450.0000 |
+| Monitors      |           48000.0000 |
+| 1.44 Floppies |           11500.0000 |
+| 1.44 Floppies |            4600.0000 |
+| 540 HDD       |            8400.0000 |
+| CD Drive      |            5250.0000 |
++---------------+----------------------+
+8 rows in set (0.00 sec)
+
+mysql> select distinct description, sellprice * qty_disp from challan_de
+tails inne
+etails.product_no;
++---------------+----------------------+
+| description   | sellprice * qty_disp |
++---------------+----------------------+
+| 1.44 Floppies |            5750.0000 |
+| 1.44 Drive    |            2100.0000 |
+| Keyboards     |            9450.0000 |
+| Monitors      |           48000.0000 |
+| 1.44 Floppies |           11500.0000 |
+| 1.44 Floppies |            4600.0000 |
+| 540 HDD       |            8400.0000 |
+| CD Drive      |            5250.0000 |
++---------------+----------------------+
+8 rows in set (0.00 sec)
+
+mysql> select description, sellprice * qty_disp from challan_details inner join product_master on product_master.product_no = challan_details.product_no;
++---------------+----------------------+
+| description   | sellprice * qty_disp |
++---------------+----------------------+
+| 1.44 Floppies |            5750.0000 |
+| 1.44 Drive    |            2100.0000 |
+| Keyboards     |            9450.0000 |
+| Monitors      |           48000.0000 |
+| 1.44 Floppies |           11500.0000 |
+| 1.44 Floppies |            4600.0000 |
+| 540 HDD       |            8400.0000 |
+| CD Drive      |            5250.0000 |
++---------------+----------------------+
+8 rows in set (0.00 sec)
+
+mysql> select qty_disp from challan_details;
++----------+
+| qty_disp |
++----------+
+|     5.00 |
+|     2.00 |
+|     3.00 |
+|     4.00 |
+|    10.00 |
+|     4.00 |
+|     1.00 |
+|     1.00 |
++----------+
+8 rows in set (0.00 sec)
+
+mysql> select qty_disp from challan_details inner join challan_header.challan_no = challan_details.challan_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= challan_details.challan_no' at line 1
+mysql> select qty_disp from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no;
++----------+
+| qty_disp |
++----------+
+|     5.00 |
+|     3.00 |
+|     4.00 |
++----------+
+3 rows in set (0.00 sec)
+
+mysql> select qty_disp from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no inner join sales_order on sales_order.order_no = challan_header.order_no;
++----------+
+| qty_disp |
++----------+
+|     5.00 |
+|     3.00 |
+|     4.00 |
++----------+
+3 rows in set (0.00 sec)
+
+mysql> select client_no, qty_disp from challan_details inner join challa
+n_header on challan_header.challan_no = challan_details.challan_no inner
+ join sales_order on sales_order.order_no = challan_header.order_no;
++-----------+----------+
+| client_no | qty_disp |
++-----------+----------+
+| 0005      |     5.00 |
+| 0003      |     3.00 |
+| 0001      |     4.00 |
++-----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select client_no, avg(qty_disp) from challan_details inner join challa
+inne
+;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'university.sales_order.client_no'; this is incompatible with sql_mode=only_full_group_by
+mysql> select client_no, avg(qty_disp) from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no
+inner join sales_order on sales_order.order_no = challan_header.order_no group by client_no;
++-----------+---------------+
+| client_no | avg(qty_disp) |
++-----------+---------------+
+| 0005      |      5.000000 |
+| 0003      |      3.000000 |
+| 0001      |      4.000000 |
++-----------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> select client_no, avg(qty_disp) from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no
+inner join sales_order on sales_order.order_no = challan_header.order_noinner join product_master on challan_details.product_no = product_master.product_no group by client_no;
+ERROR 1054 (42S22): Unknown column 'challan_header.order_noinner' in 'on clause'
+mysql> select client_no, avg(qty_disp) from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no
+inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no group by client_no;
++-----------+---------------+
+| client_no | avg(qty_disp) |
++-----------+---------------+
+| 0005      |      5.000000 |
+| 0003      |      3.000000 |
+| 0001      |      4.000000 |
++-----------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> select client_no, avg(qty_disp) from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no
+inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no group by client_no where qty_disp * sellprice > 15000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where qty_disp * sellprice > 15000' at line 1
+mysql> select client_no, avg(qty_disp) from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no
+inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no group by client_no where (qty_disp * sellprice) > 15000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where (qty_disp * sellprice) > 15000' at line 1
+mysql> select client_no, avg(qty_disp) from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no
+inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no group by client_no where sellprice > 15000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where sellprice > 15000' at line 1
+mysql> select client_no, avg(qty_disp) from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no
+inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no group by client_no having sellprice > 15000;
+ERROR 1054 (42S22): Unknown column 'sellprice' in 'having clause'
+mysql> select client_no, avg(qty_disp) from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no
+inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no group by client_no having product_master.sellprice > 15000;
+
+ERROR 1054 (42S22): Unknown column 'product_master.sellprice' in 'having clause'
+mysql> select * from product_master;
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| product_no | description   | profit_percent | unit_measure | quantity_on_hand | reorder | sellprice | costprice |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| p00001     | 1.44 Floppies |           5.00 | 4            |              100 | 20      |   1150.00 |    500.00 |
+| p03453     | Monitors      |           6.00 | 3            |               10 | 3       |  12000.00 |  11200.00 |
+| p06734     | Mouse         |           5.00 | 9            |               20 | 5       |   1015.00 |    500.00 |
+| p07865     | 1.22 Floppies |           5.00 | 12           |              100 | 20      |    525.00 |    500.00 |
+| p07868     | Keyboards     |           2.00 | 10           |               10 | 3       |   3150.00 |   3050.00 |
+| p07885     | CD Drive      |           2.50 | 8            |               10 | 3       |   5250.00 |   5100.00 |
+| p07965     | 540 HDD       |           4.00 | 7            |               10 | 3       |   8400.00 |   8000.00 |
+| p07975     | 1.44 Drive    |           5.00 | 20           |               10 | 3       |   1050.00 |   1000.00 |
+| p08865     | 1.22 Drive    |           5.00 | 21           |                2 | 3       |   1050.00 |   1000.00 |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> select client_no, avg(qty_disp), sellprice from challan_details inne
+challa
+er.order_no inner join product_master on challan_details.product_no = product_master.product_no group by client_no;
+ERROR 1055 (42000): Expression #3 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.product_master.sellprice' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select client_no, qty_disp, sellprice from challan_details inner
+join challan_header on challan_header.challan_no = challan_details.challan_no inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no group by client_no;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'university.challan_details.qty_disp' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select client_no, qty_disp, sellprice from challan_details inner
+join challan_header on challan_header.challan_no = challan_details.challan_no inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no;
++-----------+----------+-----------+
+| client_no | qty_disp | sellprice |
++-----------+----------+-----------+
+| 0005      |     5.00 |   1150.00 |
+| 0003      |     3.00 |   3150.00 |
+| 0001      |     4.00 |   1150.00 |
++-----------+----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select client_no, qty_disp, sellprice from challan_details inner
+join challan_header on challan_header.challan_no = challan_details.challan_no inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no where qty_disp * sellprice > 15000;
+Empty set (0.01 sec)
+
+mysql> select client_no, qty_disp from challan_details inner join challan_header on challan_header.challan_no = challan_details.challan_no inner join sales_order on sales_order.order_no = challan_header.order_no inner join product_master on challan_details.product_no = product_master.product_no where qty_disp * sellprice > 15000;
+Empty set (0.00 sec)
+
+mysql> select order_no, order_date from sales_order;
++----------+------------+
+| order_no | order_date |
++----------+------------+
+| 010008   | 1996-05-24 |
+| 016865   | 1996-02-18 |
+| 019001   | 1996-01-12 |
+| 019002   | 1996-01-25 |
+| 019003   | 1996-04-03 |
+| 046866   | 1996-05-20 |
++----------+------------+
+6 rows in set (0.01 sec)
+
+mysql> 
+

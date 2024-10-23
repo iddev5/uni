@@ -1,0 +1,506 @@
+Now using Node v20.12.0 (npm 10.5.0) ~/.local/share/nvm/v20.12.0/bin/node
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+
+ayush@fedora ~ 
+❯ sudo mysql -u root -p                                                                                         09:15:45
+[sudo] password for ayush: 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.31 Source distribution
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select * from students;
++--------+---------+------------------+--------+------+--------+
+| name   | roll_no | email_id         | gender | cgpa | city   |
++--------+---------+------------------+--------+------+--------+
+| Arun   | 10011   | arun@gmail.com   | Male   | 8.97 | Angul  |
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri   |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro   |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr   |
+| Hari   | 10015   | hari@gmail.com   | Male   | 7.80 | Burla  |
+| Shreya | 10016   | shreya@gmail.com | Female | 7.90 | Raipur |
+| Simran | 10017   | aman@gmail.com   | Female | 9.20 | Kota   |
++--------+---------+------------------+--------+------+--------+
+7 rows in set (0.02 sec)
+
+mysql> delete table students;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table students' at line 1
+mysql> delete from students;
+Query OK, 7 rows affected (0.02 sec)
+
+mysql> select * from students;
+Empty set (0.00 sec)
+
+mysql> drop table students;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from students;
+ERROR 1146 (42S02): Table 'university.students' doesn't exist
+mysql> describe students;
+ERROR 1146 (42S02): Table 'university.students' doesn't exist
+mysql> show tables;
++----------------------+
+| Tables_in_university |
++----------------------+
+| client_master        |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from client_master;
++-----------+---------+--------+-------------+---------+---------+
+| client_no | name    | city   | state       | pincode | bal_due |
++-----------+---------+--------+-------------+---------+---------+
+| 0001      | Ivan    | Bombay | Tamil Nadu  |  768003 | 1000.00 |
+| 0003      | Pramada | Bombay | Maharashtra |  400057 | 5000.00 |
+| 0004      | Basu    | Bombay | Maharashtra |  400056 |    0.00 |
+| 0005      | Ravi    | Bombay | NULL        |  100001 | 2000.00 |
+| 0006      | Rukmini | Bombay | Maharashtra |  400050 |    0.00 |
++-----------+---------+--------+-------------+---------+---------+
+5 rows in set (0.02 sec)
+
+mysql> select distinct city from client_master;
++--------+
+| city   |
++--------+
+| Bombay |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select distinct city, state from client_master;
++--------+-------------+
+| city   | state       |
++--------+-------------+
+| Bombay | Tamil Nadu  |
+| Bombay | Maharashtra |
+| Bombay | NULL        |
++--------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select distinct city, distinct state from client_master;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'distinct state from client_master' at line 1
+mysql> select count(distinct city) from client_master;
++----------------------+
+| count(distinct city) |
++----------------------+
+|                    1 |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> select count(distinct city, state) from client_master;
++-----------------------------+
+| count(distinct city, state) |
++-----------------------------+
+|                           2 |
++-----------------------------+
+1 row in set (0.00 sec)
+
+mysql> select count(*) as distinct countries from client_master;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'distinct countries from client_master' at line 1
+mysql> select count(*) as distinct state from client_master;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'distinct state from client_master' at line 1
+mysql> select * from client_master order by bal_due;
++-----------+---------+--------+-------------+---------+---------+
+| client_no | name    | city   | state       | pincode | bal_due |
++-----------+---------+--------+-------------+---------+---------+
+| 0004      | Basu    | Bombay | Maharashtra |  400056 |    0.00 |
+| 0006      | Rukmini | Bombay | Maharashtra |  400050 |    0.00 |
+| 0001      | Ivan    | Bombay | Tamil Nadu  |  768003 | 1000.00 |
+| 0005      | Ravi    | Bombay | NULL        |  100001 | 2000.00 |
+| 0003      | Pramada | Bombay | Maharashtra |  400057 | 5000.00 |
++-----------+---------+--------+-------------+---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select * from client_master order by pincode desc;
++-----------+---------+--------+-------------+---------+---------+
+| client_no | name    | city   | state       | pincode | bal_due |
++-----------+---------+--------+-------------+---------+---------+
+| 0001      | Ivan    | Bombay | Tamil Nadu  |  768003 | 1000.00 |
+| 0003      | Pramada | Bombay | Maharashtra |  400057 | 5000.00 |
+| 0004      | Basu    | Bombay | Maharashtra |  400056 |    0.00 |
+| 0006      | Rukmini | Bombay | Maharashtra |  400050 |    0.00 |
+| 0005      | Ravi    | Bombay | NULL        |  100001 | 2000.00 |
++-----------+---------+--------+-------------+---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select * from client_master order by pincode, bal_due desc;
++-----------+---------+--------+-------------+---------+---------+
+| client_no | name    | city   | state       | pincode | bal_due |
++-----------+---------+--------+-------------+---------+---------+
+| 0005      | Ravi    | Bombay | NULL        |  100001 | 2000.00 |
+| 0006      | Rukmini | Bombay | Maharashtra |  400050 |    0.00 |
+| 0004      | Basu    | Bombay | Maharashtra |  400056 |    0.00 |
+| 0003      | Pramada | Bombay | Maharashtra |  400057 | 5000.00 |
+| 0001      | Ivan    | Bombay | Tamil Nadu  |  768003 | 1000.00 |
++-----------+---------+--------+-------------+---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select name, bal_due, bal_due as "increased_salary" from client_master;
++---------+---------+------------------+
+| name    | bal_due | increased_salary |
++---------+---------+------------------+
+| Ivan    | 1000.00 |          1000.00 |
+| Pramada | 5000.00 |          5000.00 |
+| Basu    |    0.00 |             0.00 |
+| Ravi    | 2000.00 |          2000.00 |
+| Rukmini |    0.00 |             0.00 |
++---------+---------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> select name, bal_due, bal_due + 100 as "increased_salary" from client_master;
++---------+---------+------------------+
+| name    | bal_due | increased_salary |
++---------+---------+------------------+
+| Ivan    | 1000.00 |          1100.00 |
+| Pramada | 5000.00 |          5100.00 |
+| Basu    |    0.00 |           100.00 |
+| Ravi    | 2000.00 |          2100.00 |
+| Rukmini |    0.00 |           100.00 |
++---------+---------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> select pincode + bal_due as uid from client_master;
++-----------+
+| uid       |
++-----------+
+| 769003.00 |
+| 405057.00 |
+| 400056.00 |
+| 102001.00 |
+| 400050.00 |
++-----------+
+5 rows in set (0.00 sec)
+
+mysql> select name, pincode - 100 as "new_pincode" from client_master;
++---------+-------------+
+| name    | new_pincode |
++---------+-------------+
+| Ivan    |      767903 |
+| Pramada |      399957 |
+| Basu    |      399956 |
+| Ravi    |       99901 |
+| Rukmini |      399950 |
++---------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select name, bal_due * 2 as "double_bal" from client_master;
++---------+------------+
+| name    | double_bal |
++---------+------------+
+| Ivan    |    2000.00 |
+| Pramada |   10000.00 |
+| Basu    |       0.00 |
+| Ravi    |    4000.00 |
+| Rukmini |       0.00 |
++---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select name, bal_due / 2 as "half_bal" from client_master;
++---------+-------------+
+| name    | half_bal    |
++---------+-------------+
+| Ivan    |  500.000000 |
+| Pramada | 2500.000000 |
+| Basu    |    0.000000 |
+| Ravi    | 1000.000000 |
+| Rukmini |    0.000000 |
++---------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select name, bal_due * 2 + 100 as "upd_bal" from client_master where name='Ivan';
++------+---------+
+| name | upd_bal |
++------+---------+
+| Ivan | 2100.00 |
++------+---------+
+1 row in set (0.00 sec)
+
+mysql> select name, bal_due % 3 + 100 as "upd_bal" from client_master where name='Ivan';
++------+---------+
+| name | upd_bal |
++------+---------+
+| Ivan |  101.00 |
++------+---------+
+1 row in set (0.00 sec)
+
+mysql> select min(bal_due) from client_master;
++--------------+
+| min(bal_due) |
++--------------+
+|         0.00 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select max(bal_due) from client_master;
++--------------+
+| max(bal_due) |
++--------------+
+|      5000.00 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select count(bal_due) from client_master;
++----------------+
+| count(bal_due) |
++----------------+
+|              5 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(bal_due) from client_master;
++--------------+
+| sum(bal_due) |
++--------------+
+|      8000.00 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(bal_due) from client_master;
++--------------+
+| avg(bal_due) |
++--------------+
+|  1600.000000 |
++--------------+
+1 row in set (0.01 sec)
+
+mysql> select name, bal_due * 0.12 * 1 as simple_interest  from client_master;
++---------+-----------------+
+| name    | simple_interest |
++---------+-----------------+
+| Ivan    |        120.0000 |
+| Pramada |        600.0000 |
+| Basu    |          0.0000 |
+| Ravi    |        240.0000 |
+| Rukmini |          0.0000 |
++---------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> select name, bal_due * 0.12 * 1 as simple_interest  ^Com client_master;
+mysql> create table product_master (product_no varchar(6), description varchar(20), profit_percent decimal(2, 2), unit_measure varchar(4), quantity_on_hand number(4), reorder varchar(4), sellprice decimal(6, 2), costprice decimal(6, 2));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'number(4), reorder varchar(4), sellprice decimal(6, 2), costprice decimal(6, 2))' at line 1
+mysql> create table product_master (product_no varchar(6), description varchar(20), profit_percent decimal(2, 2), unit_measure varchar(4), quantity_on_hand integer(4), reorder varchar(4), sellprice decimal(6, 2), costprice decimal(6, 2));
+Query OK, 0 rows affected, 1 warning (0.08 sec)
+
+mysql> describe product_master;
++------------------+--------------+------+-----+---------+-------+
+| Field            | Type         | Null | Key | Default | Extra |
++------------------+--------------+------+-----+---------+-------+
+| product_no       | varchar(6)   | YES  |     | NULL    |       |
+| description      | varchar(20)  | YES  |     | NULL    |       |
+| profit_percent   | decimal(2,2) | YES  |     | NULL    |       |
+| unit_measure     | varchar(4)   | YES  |     | NULL    |       |
+| quantity_on_hand | int          | YES  |     | NULL    |       |
+| reorder          | varchar(4)   | YES  |     | NULL    |       |
+| sellprice        | decimal(6,2) | YES  |     | NULL    |       |
+| costprice        | decimal(6,2) | YES  |     | NULL    |       |
++------------------+--------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> insert into product_master values ('p00001', '1.44 Floppies', 5, '4', 100, '20', 525, 500);
+ERROR 1264 (22003): Out of range value for column 'profit_percent' at row 1
+mysql> insert into product_master values ('p00001', '1.44 Floppies', 5, '4', 100, '20', 525, 500);
+ERROR 1264 (22003): Out of range value for column 'profit_percent' at row 1
+mysql> drop table product_master;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table product_master (product_no varchar(8), description varchar(20), profit_percent decimal(2, 2), unit_measure varchar(4), quantity_on_hand integer(4), reorder varchar(4), sellprice decimal(6, 2), costprice decimal(6, 2));
+Query OK, 0 rows affected, 1 warning (0.06 sec)
+
+mysql> insert into product_master values ('p00001', '1.44 Floppies', 5, '4', 100, '20', 525, 500);
+ERROR 1264 (22003): Out of range value for column 'profit_percent' at row 1
+mysql> insert into product_master values ('p00001', '1.44 Floppies', 5.0, '4', 100, '20', 525, 500);
+ERROR 1264 (22003): Out of range value for column 'profit_percent' at row 1
+mysql> drop table product_master;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table product_master (product_no varchar(8), description varchar(20), profit_percent decimal(4, 2), unit_measure varchar(4), quantity_on_hand integer(4), reorder varchar(4), sellprice decimal(6, 2), costprice decimal(6, 2));
+Query OK, 0 rows affected, 1 warning (0.05 sec)
+
+mysql> insert into product_master values ('p00001', '1.44 Floppies', 5.0, '4', 100, '20', 525, 500);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into product_master values ('p03453', 'Monitors', 6, '3', 10, '3', 12000, 11200);
+ERROR 1264 (22003): Out of range value for column 'sellprice' at row 1
+mysql> drop table product_master;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table product_master (product_no varchar(8), description varchar(20), profit_percent decimal(4, 2), unit_measure varchar(4), quantity_on_hand integer(4), reorder varchar(4), sellprice decimal(10, 2), costprice decimal(10, 2));
+
+Query OK, 0 rows affected, 1 warning (0.06 sec)
+
+mysql> insert into product_master values ('p00001', '1.44 Floppies', 5.0, '4', 100, '20', 525, 500);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into product_master values ('p03453', 'Monitors', 6, '3', 10, '3', 12000, 11200);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into product_master values ('p06734', 'Mouse', 5, '9', 20, '5', 1015, 500);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into product_master values ('p07865', '1.22 Floppies', 5, '12', 100, '20', 525, 500);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into product_master values ('p07868', 'Keyboards', 2, '10', 10, '3', 3150, 3050);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into product_master values ('p07885', 'CD Drive', 2.5, '8', 10, '3', 5250, 5100);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into product_master values ('p07965', '540 HDD', 4, '7', 10, '3', 8400, 8000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into product_master values ('p07975', '1.44 Drive', 5, '20', 10, '3', 1050, 1000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into product_master values ('p08865', '1.22 Drive', 5, '21', 2, '3', 1050, 1000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from product_master;
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| product_no | description   | profit_percent | unit_measure | quantity_on_hand | reorder | sellprice | costprice |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| p00001     | 1.44 Floppies |           5.00 | 4            |              100 | 20      |    525.00 |    500.00 |
+| p03453     | Monitors      |           6.00 | 3            |               10 | 3       |  12000.00 |  11200.00 |
+| p06734     | Mouse         |           5.00 | 9            |               20 | 5       |   1015.00 |    500.00 |
+| p07865     | 1.22 Floppies |           5.00 | 12           |              100 | 20      |    525.00 |    500.00 |
+| p07868     | Keyboards     |           2.00 | 10           |               10 | 3       |   3150.00 |   3050.00 |
+| p07885     | CD Drive      |           2.50 | 8            |               10 | 3       |   5250.00 |   5100.00 |
+| p07965     | 540 HDD       |           4.00 | 7            |               10 | 3       |   8400.00 |   8000.00 |
+| p07975     | 1.44 Drive    |           5.00 | 20           |               10 | 3       |   1050.00 |   1000.00 |
+| p08865     | 1.22 Drive    |           5.00 | 21           |                2 | 3       |   1050.00 |   1000.00 |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> select description from product_master;
++---------------+
+| description   |
++---------------+
+| 1.44 Floppies |
+| Monitors      |
+| Mouse         |
+| 1.22 Floppies |
+| Keyboards     |
+| CD Drive      |
+| 540 HDD       |
+| 1.44 Drive    |
+| 1.22 Drive    |
++---------------+
+9 rows in set (0.00 sec)
+
+mysql> select * from product_master where description like '%Drive';
++------------+-------------+----------------+--------------+------------------+---------+-----------+-----------+
+| product_no | description | profit_percent | unit_measure | quantity_on_hand | reorder | sellprice | costprice |
++------------+-------------+----------------+--------------+------------------+---------+-----------+-----------+
+| p07885     | CD Drive    |           2.50 | 8            |               10 | 3       |   5250.00 |   5100.00 |
+| p07975     | 1.44 Drive  |           5.00 | 20           |               10 | 3       |   1050.00 |   1000.00 |
+| p08865     | 1.22 Drive  |           5.00 | 21           |                2 | 3       |   1050.00 |   1000.00 |
++------------+-------------+----------------+--------------+------------------+---------+-----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from product_master where description = '1.44 Drive' or description = '1.22 Drive';
++------------+-------------+----------------+--------------+------------------+---------+-----------+-----------+
+| product_no | description | profit_percent | unit_measure | quantity_on_hand | reorder | sellprice | costprice |
++------------+-------------+----------------+--------------+------------------+---------+-----------+-----------+
+| p07975     | 1.44 Drive  |           5.00 | 20           |               10 | 3       |   1050.00 |   1000.00 |
+| p08865     | 1.22 Drive  |           5.00 | 21           |                2 | 3       |   1050.00 |   1000.00 |
++------------+-------------+----------------+--------------+------------------+---------+-----------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> update product_master set sellingprice = 1150 where description = '1.44 Floppies';
+ERROR 1054 (42S22): Unknown column 'sellingprice' in 'field list'
+mysql> update product_master set sellprice = 1150 where description = '1.44 Floppies';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from product_master where description = '1.44 Floppies';
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| product_no | description   | profit_percent | unit_measure | quantity_on_hand | reorder | sellprice | costprice |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| p00001     | 1.44 Floppies |           5.00 | 4            |              100 | 20      |   1150.00 |    500.00 |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+1 row in set (0.00 sec)
+
+mysql> select * from product_master where sellprice > 15000;
+Empty set (0.00 sec)
+
+mysql> select * from product_master order by description;
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| product_no | description   | profit_percent | unit_measure | quantity_on_hand | reorder | sellprice | costprice |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| p08865     | 1.22 Drive    |           5.00 | 21           |                2 | 3       |   1050.00 |   1000.00 |
+| p07865     | 1.22 Floppies |           5.00 | 12           |              100 | 20      |    525.00 |    500.00 |
+| p07975     | 1.44 Drive    |           5.00 | 20           |               10 | 3       |   1050.00 |   1000.00 |
+| p00001     | 1.44 Floppies |           5.00 | 4            |              100 | 20      |   1150.00 |    500.00 |
+| p07965     | 540 HDD       |           4.00 | 7            |               10 | 3       |   8400.00 |   8000.00 |
+| p07885     | CD Drive      |           2.50 | 8            |               10 | 3       |   5250.00 |   5100.00 |
+| p07868     | Keyboards     |           2.00 | 10           |               10 | 3       |   3150.00 |   3050.00 |
+| p03453     | Monitors      |           6.00 | 3            |               10 | 3       |  12000.00 |  11200.00 |
+| p06734     | Mouse         |           5.00 | 9            |               20 | 5       |   1015.00 |    500.00 |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> select count(reorder) from client_master;
+ERROR 1054 (42S22): Unknown column 'reorder' in 'field list'
+mysql> select count(reorder) from product_master;
++----------------+
+| count(reorder) |
++----------------+
+|              9 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(quantity_on_hand), sum(reorder) from product_master;
++-----------------------+--------------+
+| sum(quantity_on_hand) | sum(reorder) |
++-----------------------+--------------+
+|                   272 |           63 |
++-----------------------+--------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(sellprice) from product_master;
++----------------+
+| avg(sellprice) |
++----------------+
+|    3732.222222 |
++----------------+
+1 row in set (0.01 sec)
+
+mysql> select min(sellprice) from product_master;
++----------------+
+| min(sellprice) |
++----------------+
+|         525.00 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> select max(sellprice) as max_price, min(sellprice) as min_price from product_master;
++-----------+-----------+
+| max_price | min_price |
++-----------+-----------+
+|  12000.00 |    525.00 |
++-----------+-----------+
+1 row in set (0.00 sec)
+
+mysql> select count(*) from product_master where sellprice >= 1500;
++----------+
+| count(*) |
++----------+
+|        4 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> 
+

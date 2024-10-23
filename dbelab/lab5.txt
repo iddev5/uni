@@ -1,0 +1,373 @@
+Now using Node v20.12.0 (npm 10.5.0) ~/.local/share/nvm/v20.12.0/bin/node
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+
+ayush@fedora ~ 
+❯ sudo sysctl -w vm.max_map_count=65530                                                                         09:28:04
+[sudo] password for ayush: 
+vm.max_map_count = 65530
+
+ayush@fedora ~ 
+❯ sudo mysql -u root -p                                                                                         09:28:10
+Enter password: 
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+
+ayush@fedora ~ [1]
+❯ sudo mysql -u root -p                                                                                         09:28:19
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.31 Source distribution
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use university;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++----------------------+
+| Tables_in_university |
++----------------------+
+| client_master        |
+| product_master       |
+| sales_master         |
+| sales_order          |
++----------------------+
+4 rows in set (0.00 sec)
+
+mysql> create table challan_header(
+    -> challan_no varchar(6) primary_key,
+    -> order_no varchar(6),
+    -> challan_date date not null,
+    -> billed_yn char(1) default 'N',
+    -> foreign key (order_no) references sales_order(order_no),
+    -> constraint billed_check check (billed_yn in ('Y', 'N')));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primary_key,
+order_no varchar(6),
+challan_date date not null,
+billed_yn char(1) ' at line 2
+mysql> create table challan_header( challan_no varchar(6) primary_key, order_no varchar(6), challan_date date not null, billed_yn character(1) default 'N', foreign key (order_no) references
+sales_order(order_no), constraint billed_check check (billed_yn in ('Y', 'N')));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primary_key, order_no varchar(6), challan_date date not null, billed_yn characte' at line 1
+mysql> create table challan_header( challan_no varchar(6) primary_key, order_no varchar(6), challan_date date not null, billed_yn character default 'N', foreign key (order_no) references sales_order(order_no), constraint billed_check check (billed_yn in ('Y', 'N')));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primary_key, order_no varchar(6), challan_date date not null, billed_yn characte' at line 1
+mysql> create table challan_header( challan_no varchar(6) primary key, order_no varchar(6), challan_date date not null, billed_yn character default 'N', foreign key (order_no) references sales_order(order_no), constraint billed_check check (billed_yn in ('Y', 'N')));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> describe challan_header;
++--------------+------------+------+-----+---------+-------+
+| Field        | Type       | Null | Key | Default | Extra |
++--------------+------------+------+-----+---------+-------+
+| challan_no   | varchar(6) | NO   | PRI | NULL    |       |
+| order_no     | varchar(6) | YES  | MUL | NULL    |       |
+| challan_date | date       | NO   |     | NULL    |       |
+| billed_yn    | char(1)    | YES  |     | N       |       |
++--------------+------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> drop table challan_header;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table challan_header( challan_no varchar(6) primary key, order_no varchar(6), challan_date date not null, billed_yn char(1) default 'N', foreign key (order_no) references sales_order(order_no), constraint billed_check check (billed_yn in ('Y', 'N')));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> describe challan_header;
++--------------+------------+------+-----+---------+-------+
+| Field        | Type       | Null | Key | Default | Extra |
++--------------+------------+------+-----+---------+-------+
+| challan_no   | varchar(6) | NO   | PRI | NULL    |       |
+| order_no     | varchar(6) | YES  | MUL | NULL    |       |
+| challan_date | date       | NO   |     | NULL    |       |
+| billed_yn    | char(1)    | YES  |     | N       |       |
++--------------+------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table challan_details (
+    -> challan_no varchar(6) primary key,
+    -> product_no varchar(6),
+    -> qty_disp decimal(4, 2) not null,
+    -> foreign key (product_no) references product_master(product_no),
+    -> constraint challan_check check (challan_no like 'C%',
+    -> 
+    -> ^C
+mysql> create table challan_details (
+    -> challan_no varchar(6) primary key,
+    -> product_no varchar(6),
+    -> qty_disp decimal(4, 2) not null,
+    -> foreign key (product_no) references product_master(product_no),
+    -> constraint challan_check check (challan_no like 'C%'),
+    -> constraint product_check check (product_no like 'p0%'));
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'challan_details_ibfk_1' in the referenced table 'product_master'
+mysql> describe product_master;
++------------------+---------------+------+-----+---------+-------+
+| Field            | Type          | Null | Key | Default | Extra |
++------------------+---------------+------+-----+---------+-------+
+| product_no       | varchar(8)    | YES  |     | NULL    |       |
+| description      | varchar(20)   | YES  |     | NULL    |       |
+| profit_percent   | decimal(4,2)  | YES  |     | NULL    |       |
+| unit_measure     | varchar(4)    | YES  |     | NULL    |       |
+| quantity_on_hand | int           | YES  |     | NULL    |       |
+| reorder          | varchar(4)    | YES  |     | NULL    |       |
+| sellprice        | decimal(10,2) | YES  |     | NULL    |       |
+| costprice        | decimal(10,2) | YES  |     | NULL    |       |
++------------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> alter table product_master add primary key(product_no);
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create table challan_details ( challan_no varchar(6) primary key, product_no varchar(6), qty_disp decimal(4, 2) not null, foreign key (product_no) references product_master(product_no), constraint challan_check check (challan_no like 'C%'), constraint product_check check (product_no like 'p0%'));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> describe challan_details;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| challan_no | varchar(6)   | NO   | PRI | NULL    |       |
+| product_no | varchar(6)   | YES  | MUL | NULL    |       |
+| qty_disp   | decimal(4,2) | NO   |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into challan_header values ('CH9001', '019001', '1995-12-12'), ('CH6865', '046865', '1995-11-12'), ('CH3965', '010008', '1995-10-12');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into challan_header values ('CH9001', '019001', '1995-12-12', 'Y'), ('CH6865', '046865', '1995-11-12', 'Y'), ('CH3965', '010008', '1995-10-12', 'Y');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`university`.`challan_header`, CONSTRAINT `challan_header_ibfk_1` FOREIGN KEY (`order_no`) REFERENCES `sales_order` (`order_no`))
+mysql> insert into challan_header values ('CH9001', '019001', '1995-12-12', 'Y'), ('CH6865', '016865', '1995-11-12', 'Y'), ('CH3965', '010008', '1995-10-12', 'Y');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`university`.`challan_header`, CONSTRAINT `challan_header_ibfk_1` FOREIGN KEY (`order_no`) REFERENCES `sales_order` (`order_no`))
+mysql> insert into challan_header values ('CH9001', '019001', '1995-12-12', 'Y');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into challan_header values ('CH6865', '016865', '1995-11-12', 'Y');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into challan_header values ('CH3965', '010008', '1995-10-12', 'Y');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`university`.`challan_header`, CONSTRAINT `challan_header_ibfk_1` FOREIGN KEY (`order_no`) REFERENCES `sales_order` (`order_no`))
+mysql> select * from sales_order;
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+| order_no | order_date | client_no | dely_add    | salesman_no | delivery_type | billed_yn | delivery_date | order_status |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+| 016865   | 1996-02-18 | 0003      | Juhu        | 500003      | F             | Y         | 1996-02-20    | F            |
+| 019001   | 1996-01-12 | 0001      | A2 Borivali | 500001      | F             | N         | 1996-01-20    | IP           |
+| 019002   | 1996-01-25 | 0006      | Mud Island  | 500002      | P             | N         | 1996-01-27    | C            |
++----------+------------+-----------+-------------+-------------+---------------+-----------+---------------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> insert into sales_order values ('010008', '1996-05-24', '0005', 'XYZ-Colony', '500004', 'F', 'N', '1996-05-26', 'IP');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into challan_header values ('CH3965', '010008', '1995-10-12', 'Y');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from challan_header;
++------------+----------+--------------+-----------+
+| challan_no | order_no | challan_date | billed_yn |
++------------+----------+--------------+-----------+
+| CH3965     | 010008   | 1995-10-12   | Y         |
+| CH6865     | 016865   | 1995-11-12   | Y         |
+| CH9001     | 019001   | 1995-12-12   | Y         |
++------------+----------+--------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> insert into challan_details values ('CH9001', 'p00001', 4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into challan_details values ('CH9001', 'p07965', 1);
+ERROR 1062 (23000): Duplicate entry 'CH9001' for key 'challan_details.PRIMARY'
+mysql> insert into challan_details values ('CH9002', 'p07965', 1);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into challan_details values ('CH9003', 'p07885', 1);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into challan_details values ('CH6865', 'p07868', 3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into challan_details values ('CH6866', 'p03453', 4);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into challan_details values ('CH6867', 'p00001', 10);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into challan_details values ('CH3965', 'p00001', 5);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into challan_details values ('CH3966', 'p07975', 2);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from challan_details;
++------------+------------+----------+
+| challan_no | product_no | qty_disp |
++------------+------------+----------+
+| CH3965     | p00001     |     5.00 |
+| CH3966     | p07975     |     2.00 |
+| CH6865     | p07868     |     3.00 |
+| CH6866     | p03453     |     4.00 |
+| CH6867     | p00001     |    10.00 |
+| CH9001     | p00001     |     4.00 |
+| CH9002     | p07965     |     1.00 |
+| CH9003     | p07885     |     1.00 |
++------------+------------+----------+
+8 rows in set (0.00 sec)
+
+mysql> alter table client_master add phone_number varchar(11);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe client_master;
++--------------+---------------+------+-----+---------+-------+
+| Field        | Type          | Null | Key | Default | Extra |
++--------------+---------------+------+-----+---------+-------+
+| client_no    | varchar(6)    | NO   | PRI | NULL    |       |
+| name         | varchar(20)   | YES  |     | NULL    |       |
+| city         | varchar(15)   | YES  |     | NULL    |       |
+| state        | varchar(15)   | YES  |     | NULL    |       |
+| pincode      | int           | YES  |     | NULL    |       |
+| bal_due      | decimal(10,2) | YES  |     | NULL    |       |
+| phone_number | varchar(11)   | YES  |     | NULL    |       |
++--------------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> insert into challan_details values ('D0001', 'p00001', 1);
+ERROR 3819 (HY000): Check constraint 'challan_check' is violated.
+mysql> alter table product_master modify description varchar(20) not null;
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table product_master modify description varchar(20) not null;^C
+mysql> describe product_master;
++------------------+---------------+------+-----+---------+-------+
+| Field            | Type          | Null | Key | Default | Extra |
++------------------+---------------+------+-----+---------+-------+
+| product_no       | varchar(8)    | NO   | PRI | NULL    |       |
+| description      | varchar(20)   | NO   |     | NULL    |       |
+| profit_percent   | decimal(4,2)  | YES  |     | NULL    |       |
+| unit_measure     | varchar(4)    | YES  |     | NULL    |       |
+| quantity_on_hand | int           | YES  |     | NULL    |       |
+| reorder          | varchar(4)    | YES  |     | NULL    |       |
+| sellprice        | decimal(10,2) | YES  |     | NULL    |       |
+| costprice        | decimal(10,2) | YES  |     | NULL    |       |
++------------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> alter table product_master modify profit_percent decimal(4, 2) not null;
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table product_master modify sell_price decimal(10, 2) not null;
+ERROR 1054 (42S22): Unknown column 'sell_price' in 'product_master'
+mysql> alter table product_master modify sellprice decimal(10, 2) not null;
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table product_master modify costprice decimal(10, 2) not null;
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe product_master;
++------------------+---------------+------+-----+---------+-------+
+| Field            | Type          | Null | Key | Default | Extra |
++------------------+---------------+------+-----+---------+-------+
+| product_no       | varchar(8)    | NO   | PRI | NULL    |       |
+| description      | varchar(20)   | NO   |     | NULL    |       |
+| profit_percent   | decimal(4,2)  | NO   |     | NULL    |       |
+| unit_measure     | varchar(4)    | YES  |     | NULL    |       |
+| quantity_on_hand | int           | YES  |     | NULL    |       |
+| reorder          | varchar(4)    | YES  |     | NULL    |       |
+| sellprice        | decimal(10,2) | NO   |     | NULL    |       |
+| costprice        | decimal(10,2) | NO   |     | NULL    |       |
++------------------+---------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+
+mysql> describe_client_master;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'describe_client_master' at line 1
+mysql> describe client_master;
++--------------+---------------+------+-----+---------+-------+
+| Field        | Type          | Null | Key | Default | Extra |
++--------------+---------------+------+-----+---------+-------+
+| client_no    | varchar(6)    | NO   | PRI | NULL    |       |
+| name         | varchar(20)   | YES  |     | NULL    |       |
+| city         | varchar(15)   | YES  |     | NULL    |       |
+| state        | varchar(15)   | YES  |     | NULL    |       |
+| pincode      | int           | YES  |     | NULL    |       |
+| bal_due      | decimal(10,2) | YES  |     | NULL    |       |
+| phone_number | varchar(11)   | YES  |     | NULL    |       |
++--------------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> alter table client_master modify client_no varchar(10);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe client_master;
++--------------+---------------+------+-----+---------+-------+
+| Field        | Type          | Null | Key | Default | Extra |
++--------------+---------------+------+-----+---------+-------+
+| client_no    | varchar(10)   | NO   | PRI | NULL    |       |
+| name         | varchar(20)   | YES  |     | NULL    |       |
+| city         | varchar(15)   | YES  |     | NULL    |       |
+| state        | varchar(15)   | YES  |     | NULL    |       |
+| pincode      | int           | YES  |     | NULL    |       |
+| bal_due      | decimal(10,2) | YES  |     | NULL    |       |
+| phone_number | varchar(11)   | YES  |     | NULL    |       |
++--------------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select product_no, description where profit_percent between 20 and 30;
+ERROR 1054 (42S22): Unknown column 'product_no' in 'field list'
+mysql> select product_no, description where profit_per^Cnt between 20 and 30;
+mysql> select product_no, description from product_master where profit_percent between 20 and 30;
+Empty set (0.01 sec)
+
+mysql> select product_no, description from product_master where profit_percent >= 20 and profit_percent <= 30;
+Empty set (0.00 sec)
+
+mysql> select * from product_master;
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| product_no | description   | profit_percent | unit_measure | quantity_on_hand | reorder | sellprice | costprice |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+| p00001     | 1.44 Floppies |           5.00 | 4            |              100 | 20      |   1150.00 |    500.00 |
+| p03453     | Monitors      |           6.00 | 3            |               10 | 3       |  12000.00 |  11200.00 |
+| p06734     | Mouse         |           5.00 | 9            |               20 | 5       |   1015.00 |    500.00 |
+| p07865     | 1.22 Floppies |           5.00 | 12           |              100 | 20      |    525.00 |    500.00 |
+| p07868     | Keyboards     |           2.00 | 10           |               10 | 3       |   3150.00 |   3050.00 |
+| p07885     | CD Drive      |           2.50 | 8            |               10 | 3       |   5250.00 |   5100.00 |
+| p07965     | 540 HDD       |           4.00 | 7            |               10 | 3       |   8400.00 |   8000.00 |
+| p07975     | 1.44 Drive    |           5.00 | 20           |               10 | 3       |   1050.00 |   1000.00 |
+| p08865     | 1.22 Drive    |           5.00 | 21           |                2 | 3       |   1050.00 |   1000.00 |
++------------+---------------+----------------+--------------+------------------+---------+-----------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> select product_no, description from product_master where profit_percent >= 20.0 and profit_percent <= 30.0;
+Empty set (0.00 sec)
+
+mysql> select product_no, description from product_master where profit_percent >= 20.0;
+Empty set (0.01 sec)
+
+mysql> select product_no, description from product_master;
++------------+---------------+
+| product_no | description   |
++------------+---------------+
+| p00001     | 1.44 Floppies |
+| p03453     | Monitors      |
+| p06734     | Mouse         |
+| p07865     | 1.22 Floppies |
+| p07868     | Keyboards     |
+| p07885     | CD Drive      |
+| p07965     | 540 HDD       |
+| p07975     | 1.44 Drive    |
+| p08865     | 1.22 Drive    |
++------------+---------------+
+9 rows in set (0.00 sec)
+
+mysql> 
+

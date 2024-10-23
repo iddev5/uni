@@ -1,0 +1,315 @@
+Now using Node v20.12.0 (npm 10.5.0) ~/.local/share/nvm/v20.12.0/bin/node
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+
+ayush@fedora ~ 
+❯ sudo mysql -u root -p                                                                                         09:10:16
+[sudo] password for ayush: 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.31 Source distribution
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'database' at line 1
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| university         |
++--------------------+
+5 rows in set (0.01 sec)
+
+mysql> show tables;
+ERROR 1046 (3D000): No database selected
+mysql> clear;
+mysql> cls;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'cls' at line 1
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| university         |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> create table patient (patient_id integer, first_name varchar(20), last_name varchar(20), dob date, diagnosis varchar(20), adm_date date, insurance_provider varchar(20), treatment_plan varchar(20));
+ERROR 1046 (3D000): No database selected
+mysql> use university;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> create table patient (patient_id integer, first_name varchar(20), last_name varchar(20), dob date, diagnosis varchar(20), adm_date date, insurance_provider varchar(20), treatment_plan varchar(20));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> describe patient;
++--------------------+-------------+------+-----+---------+-------+
+| Field              | Type        | Null | Key | Default | Extra |
++--------------------+-------------+------+-----+---------+-------+
+| patient_id         | int         | YES  |     | NULL    |       |
+| first_name         | varchar(20) | YES  |     | NULL    |       |
+| last_name          | varchar(20) | YES  |     | NULL    |       |
+| dob                | date        | YES  |     | NULL    |       |
+| diagnosis          | varchar(20) | YES  |     | NULL    |       |
+| adm_date           | date        | YES  |     | NULL    |       |
+| insurance_provider | varchar(20) | YES  |     | NULL    |       |
+| treatment_plan     | varchar(20) | YES  |     | NULL    |       |
++--------------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> insert into patient values (101, 'Alice', 'Johnson', 1980/03/12, 'Hypertension', 2024/01/10, 'Healthcare Inc', 'Medication'};
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '}' at line 1
+mysql> insert into patient values (101, 'Alice', 'Johnson', 1980/03/12, 'Hypertension', 2024/01/10, 'Healthcare Inc', 'Medication');
+ERROR 1292 (22007): Incorrect date value: '55.000000000000000000' for column 'dob' at row 1
+mysql> insert into patient values (101, 'Alice', 'Johnson', '1980/03/12', 'Hypertension', '2024/01/10', 'Healthcare Inc'
+, 'Medication');
+Query OK, 1 row affected, 2 warnings (0.02 sec)
+
+mysql> select * from patient;
++------------+------------+-----------+------------+--------------+------------+--------------------+----------------+
+| patient_id | first_name | last_name | dob        | diagnosis    | adm_date   | insurance_provider | treatment_plan |
++------------+------------+-----------+------------+--------------+------------+--------------------+----------------+
+|        101 | Alice      | Johnson   | 1980-03-12 | Hypertension | 2024-01-10 | Healthcare Inc     | Medication     |
++------------+------------+-----------+------------+--------------+------------+--------------------+----------------+
+1 row in set (0.00 sec)
+
+mysql> insert into patient values (102, 'Bob', 'Williams', '1975/07/22', 'Diabetes', '2024/02/15', 'Medcare', 'Insulin therapy');
+Query OK, 1 row affected, 2 warnings (0.02 sec)
+
+mysql> insert into patient values (103, 'Carol', 'Smith', '1992/09/30', 'Asthma', '2024/01/20', 'Healthcare Inc', 'Inhailers');
+Query OK, 1 row affected, 2 warnings (0.02 sec)
+
+mysql> insert into patient values (104, 'David', 'Brown', '1988/11/05', 'Allergic', '2024/03/01', 'Bestcare', 'Allergic shots');
+Query OK, 1 row affected, 2 warnings (0.03 sec)
+
+mysql> insert into patient values (105, 'Eva', 'Davis', '1965/06/15', 'Hypertension', '2024/01/25', 'Medcare', 'Medication');
+Query OK, 1 row affected, 2 warnings (0.00 sec)
+
+mysql> select * from patient;
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+
+| patient_id | first_name | last_name | dob        | diagnosis    | adm_date   | insurance_provider | treatment_plan  |
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+
+|        101 | Alice      | Johnson   | 1980-03-12 | Hypertension | 2024-01-10 | Healthcare Inc     | Medication      |
+|        102 | Bob        | Williams  | 1975-07-22 | Diabetes     | 2024-02-15 | Medcare            | Insulin therapy |
+|        103 | Carol      | Smith     | 1992-09-30 | Asthma       | 2024-01-20 | Healthcare Inc     | Inhailers       |
+|        104 | David      | Brown     | 1988-11-05 | Allergic     | 2024-03-01 | Bestcare           | Allergic shots  |
+|        105 | Eva        | Davis     | 1965-06-15 | Hypertension | 2024-01-25 | Medcare            | Medication      |
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> select adm_date  from patient;
++------------+
+| adm_date   |
++------------+
+| 2024-01-10 |
+| 2024-02-15 |
+| 2024-01-20 |
+| 2024-03-01 |
+| 2024-01-25 |
++------------+
+5 rows in set (0.01 sec)
+
+mysql> select first_name, diagnosis from patient where diagnosis = 'Diabetes';
++------------+-----------+
+| first_name | diagnosis |
++------------+-----------+
+| Bob        | Diabetes  |
++------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> select * from patient where diagnosis = 'Hypertension' and dob is < '1980/01/01';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '< '1980/01/01'' at line 1
+mysql> select * from patient where diagnosis = 'Hypertension' and dob < '1980/01/01';
++------------+------------+-----------+------------+--------------+------------+--------------------+----------------+
+| patient_id | first_name | last_name | dob        | diagnosis    | adm_date   | insurance_provider | treatment_plan |
++------------+------------+-----------+------------+--------------+------------+--------------------+----------------+
+|        105 | Eva        | Davis     | 1965-06-15 | Hypertension | 2024-01-25 | Medcare            | Medication     |
++------------+------------+-----------+------------+--------------+------------+--------------------+----------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> select count (*) from patient;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '*) from patient' at line 1
+mysql> select count(*) from patient;
++----------+
+| count(*) |
++----------+
+|        5 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select distinct diagnosis from patient;
++--------------+
+| diagnosis    |
++--------------+
+| Hypertension |
+| Diabetes     |
+| Asthma       |
+| Allergic     |
++--------------+
+4 rows in set (0.00 sec)
+
+mysql> select first_name as first, last_name as last from patient;
++-------+----------+
+| first | last     |
++-------+----------+
+| Alice | Johnson  |
+| Bob   | Williams |
+| Carol | Smith    |
+| David | Brown    |
+| Eva   | Davis    |
++-------+----------+
+5 rows in set (0.00 sec)
+
+mysql> update table patient set treatment_plan='Nebulizers' where patient_id=103;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table patient set treatment_plan='Nebulizers' where patient_id=103' at line 1
+mysql> update patient set treatment_plan='Nebulizers' where patient_id=103;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from patient where patient_id=103
+    -> ;
++------------+------------+-----------+------------+-----------+------------+--------------------+----------------+
+| patient_id | first_name | last_name | dob        | diagnosis | adm_date   | insurance_provider | treatment_plan |
++------------+------------+-----------+------------+-----------+------------+--------------------+----------------+
+|        103 | Carol      | Smith     | 1992-09-30 | Asthma    | 2024-01-20 | Healthcare Inc     | Nebulizers     |
++------------+------------+-----------+------------+-----------+------------+--------------------+----------------+
+1 row in set (0.00 sec)
+
+mysql> select * from patient where dob between '1970/01/01' and '1990/01/01';
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+
+| patient_id | first_name | last_name | dob        | diagnosis    | adm_date   | insurance_provider | treatment_plan  |
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+
+|        101 | Alice      | Johnson   | 1980-03-12 | Hypertension | 2024-01-10 | Healthcare Inc     | Medication      |
+|        102 | Bob        | Williams  | 1975-07-22 | Diabetes     | 2024-02-15 | Medcare            | Insulin therapy |
+|        104 | David      | Brown     | 1988-11-05 | Allergic     | 2024-03-01 | Bestcare           | Allergic shots  |
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+
+3 rows in set, 10 warnings (0.00 sec)
+
+mysql> select patient_id, first_name from patient where dob between '1970/01/01' and '1990/01/01';
++------------+------------+
+| patient_id | first_name |
++------------+------------+
+|        101 | Alice      |
+|        102 | Bob        |
+|        104 | David      |
++------------+------------+
+3 rows in set, 10 warnings (0.00 sec)
+
+mysql> select patient_id, first_name from patient where last_name like 'S%';
++------------+------------+
+| patient_id | first_name |
++------------+------------+
+|        103 | Carol      |
++------------+------------+
+1 row in set (0.00 sec)
+
+mysql> select * from patient where insurance_provider is NULL;
+Empty set (0.00 sec)
+
+mysql> alter table patient add emergency_contact varchar(11);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe patient;
++--------------------+-------------+------+-----+---------+-------+
+| Field              | Type        | Null | Key | Default | Extra |
++--------------------+-------------+------+-----+---------+-------+
+| patient_id         | int         | YES  |     | NULL    |       |
+| first_name         | varchar(20) | YES  |     | NULL    |       |
+| last_name          | varchar(20) | YES  |     | NULL    |       |
+| dob                | date        | YES  |     | NULL    |       |
+| diagnosis          | varchar(20) | YES  |     | NULL    |       |
+| adm_date           | date        | YES  |     | NULL    |       |
+| insurance_provider | varchar(20) | YES  |     | NULL    |       |
+| treatment_plan     | varchar(20) | YES  |     | NULL    |       |
+| emergency_contact  | varchar(11) | YES  |     | NULL    |       |
++--------------------+-------------+------+-----+---------+-------+
+9 rows in set (0.00 sec)
+
+mysql> select * from patient;
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+-------------------+
+| patient_id | first_name | last_name | dob        | diagnosis    | adm_date   | insurance_provider | treatment_plan  | emergency_contact |
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+-------------------+
+|        101 | Alice      | Johnson   | 1980-03-12 | Hypertension | 2024-01-10 | Healthcare Inc     | Medication      | NULL              |
+|        102 | Bob        | Williams  | 1975-07-22 | Diabetes     | 2024-02-15 | Medcare            | Insulin therapy | NULL              |
+|        103 | Carol      | Smith     | 1992-09-30 | Asthma       | 2024-01-20 | Healthcare Inc     | Nebulizers      | NULL              |
+|        104 | David      | Brown     | 1988-11-05 | Allergic     | 2024-03-01 | Bestcare           | Allergic shots  | NULL              |
+|        105 | Eva        | Davis     | 1965-06-15 | Hypertension | 2024-01-25 | Medcare            | Medication      | NULL              |
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> select patient_id, first_name, adm_date from patient order by adm_date desc;
++------------+------------+------------+
+| patient_id | first_name | adm_date   |
++------------+------------+------------+
+|        104 | David      | 2024-03-01 |
+|        102 | Bob        | 2024-02-15 |
+|        105 | Eva        | 2024-01-25 |
+|        103 | Carol      | 2024-01-20 |
+|        101 | Alice      | 2024-01-10 |
++------------+------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select patient_id, first_name, adm_date from patient where adm_date not between '1970/01/01' and '1990/01/01';
++------------+------------+------------+
+| patient_id | first_name | adm_date   |
++------------+------------+------------+
+|        101 | Alice      | 2024-01-10 |
+|        102 | Bob        | 2024-02-15 |
+|        103 | Carol      | 2024-01-20 |
+|        104 | David      | 2024-03-01 |
+|        105 | Eva        | 2024-01-25 |
++------------+------------+------------+
+5 rows in set, 10 warnings (0.00 sec)
+
+mysql> select patient_id, first_name, dob from patient where dob not between '1970/01/01' and '1990/01/01';
++------------+------------+------------+
+| patient_id | first_name | dob        |
++------------+------------+------------+
+|        103 | Carol      | 1992-09-30 |
+|        105 | Eva        | 1965-06-15 |
++------------+------------+------------+
+2 rows in set, 10 warnings (0.00 sec)
+
+mysql> delete from patient where patient_id=104;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from patient;
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+-------------------+
+| patient_id | first_name | last_name | dob        | diagnosis    | adm_date   | insurance_provider | treatment_plan  | emergency_contact |
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+-------------------+
+|        101 | Alice      | Johnson   | 1980-03-12 | Hypertension | 2024-01-10 | Healthcare Inc     | Medication      | NULL              |
+|        102 | Bob        | Williams  | 1975-07-22 | Diabetes     | 2024-02-15 | Medcare            | Insulin therapy | NULL              |
+|        103 | Carol      | Smith     | 1992-09-30 | Asthma       | 2024-01-20 | Healthcare Inc     | Nebulizers      | NULL              |
+|        105 | Eva        | Davis     | 1965-06-15 | Hypertension | 2024-01-25 | Medcare            | Medication      | NULL              |
++------------+------------+-----------+------------+--------------+------------+--------------------+-----------------+-------------------+
+4 rows in set (0.00 sec)
+
+mysql> drop table patient;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> describe patient;
+ERROR 1146 (42S02): Table 'university.patient' doesn't exist
+mysql> exit
+Bye
+
+ayush@fedora ~ 
+❯                                                                                                                                         10:26:29
+

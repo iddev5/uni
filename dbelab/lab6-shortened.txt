@@ -1,0 +1,214 @@
+1) 
+
+select distinct challan_details.product_no, product_master.description from sales_order 
+inner join client_master on sales_order.client_no = client_master.client_no 
+inner join challan_header on sales_order.order_no = challan_header.order_no 
+inner join challan_details on challan_header.challan_no = challan_details.challan_no 
+inner join product_master on product_master.product_no = challan_details.product_no 
+where client_master.name = "Ivan";
++------------+---------------+
+| product_no | description   |
++------------+---------------+
+| p00001     | 1.44 Floppies |
++------------+---------------+
+1 row in set (0.00 sec)
+
+2)
+
+select description, qty_disp from sales_order 
+inner join challan_header on sales_order.order_no = challan_header.order_no 
+inner join challan_details on challan_details.challan_no = challan_header.challan_no 
+inner join product_master on product_master.product_no = challan_details.product_no 
+where order_status = "C";
+Empty set (0.00 sec)
+
+
+3)
+
+select product_master.product_no, description from sales_order 
+inner join challan_header on sales_order.order_no = challan_header.order_no 
+inner join challan_details on challan_details.challan_no = challan_header.challan_no 
+inner join product_master on product_master.product_no = challan_details.product_no 
+where order_status = "IP";
+
++------------+---------------+
+| product_no | description   |
++------------+---------------+
+| p00001     | 1.44 Floppies |
+| p00001     | 1.44 Floppies |
++------------+---------------+
+
+
+4)
+
+select client_master.name, description from sales_order 
+inner join client_master on client_master.client_no = sales_order.client_no 
+inner join challan_header on challan_header.order_no = sales_order.order_no 
+inner join challan_details on challan_details.challan_no = challan_header.challan_no 
+inner join product_master on product_master.product_no = challan_details.product_no 
+where description = "CD Drive";
+
+Empty set (0.00 sec)
+
+
+5)
+
+select product_master.product_no, sales_order.order_no from sales_order 
+inner join challan_header on challan_header.order_no = sales_order.order_no 
+inner join challan_details on challan_details.challan_no = challan_header.challan_no 
+inner join product_master on product_master.product_no = challan_details.product_no 
+where challan_details.qty_disp < 5.0 and product_master.description = "1.44 Floppies";
++------------+----------+
+| product_no | order_no |
++------------+----------+
+| p00001     | 019001   |
++------------+----------+
+1 row in set (0.00 sec)
+
+6)
+
+select challan_details.product_no, product_master.description, challan_details.qty_disp from sales_order 
+inner join client_master on sales_order.client_no = client_master.client_no 
+inner join challan_header on sales_order.order_no = challan_header.order_no 
+inner join challan_details on challa 
+where client_master.name in ("Ivan", "Vandana");
++------------+---------------+----------+
+| product_no | description   | qty_disp |
++------------+---------------+----------+
+| p00001     | 1.44 Floppies |     4.00 |
++------------+---------------+----------+
+1 row in set (0.01 sec)
+
+7)
+
+select challan_details.product_no, product_master.description, challan_details.qty_disp from sales_order 
+inner join client_master on sales_order.client_no = client_master.client_no 
+inner join challan_header on sales_order.order_no = challan_header.order_no 
+inner join challan_details on challan_header.challan_no = challan_details.challan_no 
+inner join product_master on product_master.product_no = challan_details.product_no 
+where client_master.client_no in ("0001", "0002");
++------------+---------------+----------+
+| product_no | description   | qty_disp |
++------------+---------------+----------+
+| p00001     | 1.44 Floppies |     4.00 |
++------------+---------------+----------+
+1 row in set (0.00 sec)
+
+8)
+
+select client_no, count(sales_order.salesman_no) from sales_order 
+inner join sales_master on sales_master.salesman_no = sales_order.salesman_no 
+group by client_no having count(sales_order.salesman_no) > 1;
++-----------+--------------------------------+
+| client_no | count(sales_order.salesman_no) |
++-----------+--------------------------------+
+| 0001      |                              2 |
++-----------+--------------------------------+
+1 row in set (0.00 sec)
+
+9)
+
+select date_format(order_date, '%d/%m/%y') as date from sales_order;
++----------+
+| date     |
++----------+
+| 24/05/96 |
+| 18/02/96 |
+| 12/01/96 |
+| 25/01/96 |
+| 03/04/96 |
+| 20/05/96 |
++----------+
+6 rows in set (0.00 sec)
+
+10)
+
+select description, sum(qty_disp) from challan_details 
+inner join product_master on product_master.product_no = challan_details.product_no 
+group by description;
++---------------+---------------+
+| description   | sum(qty_disp) |
++---------------+---------------+
+| 1.44 Floppies |         19.00 |
+| 1.44 Drive    |          2.00 |
+| Keyboards     |          3.00 |
+| Monitors      |          4.00 |
+| 540 HDD       |          1.00 |
+| CD Drive      |          1.00 |
++---------------+---------------+
+6 rows in set (0.00 sec)
+
+11)
+
+select description, sellprice * qty_disp from challan_details 
+inner join product_master on product_master.product_no = challan_details.product_no;
++---------------+----------------------+
+| description   | sellprice * qty_disp |
++---------------+----------------------+
+| 1.44 Floppies |            5750.0000 |
+| 1.44 Drive    |            2100.0000 |
+| Keyboards     |            9450.0000 |
+| Monitors      |           48000.0000 |
+| 1.44 Floppies |           11500.0000 |
+| 1.44 Floppies |            4600.0000 |
+| 540 HDD       |            8400.0000 |
+| CD Drive      |            5250.0000 |
++---------------+----------------------+
+8 rows in set (0.00 sec)
+
+
+
+12)
+
+select client_no, qty_disp from challan_details 
+inner join challan_header on challan_header.challan_no = challan_details.challan_no 
+inner join sales_order on sales_order.order_no = challan_header.order_no 
+inner join product_master on challan_details.product_no = product_master.product_no 
+where qty_disp * sellprice > 15000;
+Empty set (0.00 sec)
+
+13)
+
+select product_master.product_no from client_master 
+inner join sales_order on client_master.client_no = sales_order.client_no 
+inner join challan_header on sales_order.order_no = challan_header.order_no 
+inner join challan_details on challan_header.challan_no = challan_details.challan_no 
+inner join product_master on challan_details.product_no = product_master.product_no 
+where name='Ivan' group by product_master.product_no;
++------------+
+| product_no |
++------------+
+| p00001     |
++------------+
+
+14)
+
+select client_master.client_no from product_master 
+inner join challan_details on product_master.product_no = challan_details.product_no 
+inner join challan_header on challan_details.challan_no = challan_header.challan_no 
+inner join sales_order on challan_header.order_no = sales_order.order_no 
+inner join client_master on sales_order.client_no = client_master.client_no 
+where description = 'CD Drive' group by client_master.client_no;
+Empty set (0.00 sec)
+
+15) 
+
+select order_no,order_date from sales_order group by order_no,order_date;
++----------+------------+
+| order_no | order_date |
++----------+------------+
+| 010008   | 1996-05-24 |
+| 016865   | 1996-02-18 |
+| 019001   | 1996-01-12 |
+| 019002   | 1996-01-25 |
+| 019003   | 1996-04-03 |
+| 046866   | 1996-05-20 |
++----------+------------+
+6 rows in set (0.01 sec)
+
+
+
+
+
+
+

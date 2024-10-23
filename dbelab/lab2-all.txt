@@ -1,0 +1,408 @@
+Now using Node v20.12.0 (npm 10.5.0) ~/.local/share/nvm/v20.12.0/bin/node
+Welcome to fish, the friendly interactive shell
+Type help for instructions on how to use fish
+
+ayush@fedora ~ 
+❯ sudo mysql -u root -p                                                                                         09:16:06
+[sudo] password for ayush: 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.31 Source distribution
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> list tables;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'list tables' at line 1
+mysql> clear;
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| university         |
++--------------------+
+5 rows in set (0.01 sec)
+
+mysql> use university;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> describe students;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| name     | varchar(10)  | YES  |     | NULL    |       |
+| roll_no  | varchar(10)  | YES  |     | NULL    |       |
+| email_id | varchar(50)  | YES  |     | NULL    |       |
+| gender   | varchar(10)  | YES  |     | NULL    |       |
+| cgpa     | decimal(4,2) | YES  |     | NULL    |       |
+| city     | varchar(10)  | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> select * from students;
++--------+---------+------------------+--------+------+-------+
+| name   | roll_no | email_id         | gender | cgpa | city  |
++--------+---------+------------------+--------+------+-------+
+| Arun   | 10011   | arun@gmail.com   | Male   | 8.97 | Angul |
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri  |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro  |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr  |
+| Hari   | 10015   | hari@gmail.com   | Male   | 7.80 | Burla |
++--------+---------+------------------+--------+------+-------+
+5 rows in set (0.02 sec)
+
+mysql> select * from students where gender='Female';
+Empty set (0.00 sec)
+
+mysql>  insert into students values ('Shreya', '10016', 'Female', 7.9, 'Raipur');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql>  insert into students values ('Shreya', '10016', 'shreya@gmail.com', 'Female', 7.9, 'Raipur');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from students where gender='Female';
++--------+---------+------------------+--------+------+--------+
+| name   | roll_no | email_id         | gender | cgpa | city   |
++--------+---------+------------------+--------+------+--------+
+| Shreya | 10016   | shreya@gmail.com | Female | 7.90 | Raipur |
++--------+---------+------------------+--------+------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from students where cgpa > 8.0;
++--------+---------+------------------+--------+------+-------+
+| name   | roll_no | email_id         | gender | cgpa | city  |
++--------+---------+------------------+--------+------+-------+
+| Arun   | 10011   | arun@gmail.com   | Male   | 8.97 | Angul |
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri  |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro  |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr  |
++--------+---------+------------------+--------+------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from students where cgpa < 10.0;
++--------+---------+------------------+--------+------+--------+
+| name   | roll_no | email_id         | gender | cgpa | city   |
++--------+---------+------------------+--------+------+--------+
+| Arun   | 10011   | arun@gmail.com   | Male   | 8.97 | Angul  |
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri   |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro   |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr   |
+| Hari   | 10015   | hari@gmail.com   | Male   | 7.80 | Burla  |
+| Shreya | 10016   | shreya@gmail.com | Female | 7.90 | Raipur |
++--------+---------+------------------+--------+------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from students where cgpa >= 9.0;
+Empty set (0.00 sec)
+
+mysql> insert into students values ('Simran', '10017', 'aman@gmail.com', 'Female', 9.2, 'Kota');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from students where cgpa >= 9.0;
++--------+---------+----------------+--------+------+------+
+| name   | roll_no | email_id       | gender | cgpa | city |
++--------+---------+----------------+--------+------+------+
+| Simran | 10017   | aman@gmail.com | Female | 9.20 | Kota |
++--------+---------+----------------+--------+------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from students where cgpa <= 10.0;
++--------+---------+------------------+--------+------+--------+
+| name   | roll_no | email_id         | gender | cgpa | city   |
++--------+---------+------------------+--------+------+--------+
+| Arun   | 10011   | arun@gmail.com   | Male   | 8.97 | Angul  |
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri   |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro   |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr   |
+| Hari   | 10015   | hari@gmail.com   | Male   | 7.80 | Burla  |
+| Shreya | 10016   | shreya@gmail.com | Female | 7.90 | Raipur |
+| Simran | 10017   | aman@gmail.com   | Female | 9.20 | Kota   |
++--------+---------+------------------+--------+------+--------+
+7 rows in set (0.00 sec)
+
+mysql> select * from students where gender <> 'Female';
++--------+---------+------------------+--------+------+-------+
+| name   | roll_no | email_id         | gender | cgpa | city  |
++--------+---------+------------------+--------+------+-------+
+| Arun   | 10011   | arun@gmail.com   | Male   | 8.97 | Angul |
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri  |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro  |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr  |
+| Hari   | 10015   | hari@gmail.com   | Male   | 7.80 | Burla |
++--------+---------+------------------+--------+------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from students where city='Puri' and city='Kota';
+Empty set (0.00 sec)
+
+mysql> select * from students where city='Puri' and gender='Male';
++-------+---------+-----------------+--------+------+------+
+| name  | roll_no | email_id        | gender | cgpa | city |
++-------+---------+-----------------+--------+------+------+
+| Samar | 10012   | samar@gmail.com | Male   | 8.50 | Puri |
++-------+---------+-----------------+--------+------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from students where city='Puri' or city='Kota';
++--------+---------+-----------------+--------+------+------+
+| name   | roll_no | email_id        | gender | cgpa | city |
++--------+---------+-----------------+--------+------+------+
+| Samar  | 10012   | samar@gmail.com | Male   | 8.50 | Puri |
+| Simran | 10017   | aman@gmail.com  | Female | 9.20 | Kota |
++--------+---------+-----------------+--------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from students where city='Burla' or city='Kota';
++--------+---------+----------------+--------+------+-------+
+| name   | roll_no | email_id       | gender | cgpa | city  |
++--------+---------+----------------+--------+------+-------+
+| Hari   | 10015   | hari@gmail.com | Male   | 7.80 | Burla |
+| Simran | 10017   | aman@gmail.com | Female | 9.20 | Kota  |
++--------+---------+----------------+--------+------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from students where not gender='Male';
++--------+---------+------------------+--------+------+--------+
+| name   | roll_no | email_id         | gender | cgpa | city   |
++--------+---------+------------------+--------+------+--------+
+| Shreya | 10016   | shreya@gmail.com | Female | 7.90 | Raipur |
+| Simran | 10017   | aman@gmail.com   | Female | 9.20 | Kota   |
++--------+---------+------------------+--------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from students where name like _a%;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%' at line 1
+mysql> select * from students where name like '_a%';
++-------+---------+-----------------+--------+------+-------+
+| name  | roll_no | email_id        | gender | cgpa | city  |
++-------+---------+-----------------+--------+------+-------+
+| Samar | 10012   | samar@gmail.com | Male   | 8.50 | Puri  |
+| Hari  | 10015   | hari@gmail.com  | Male   | 7.80 | Burla |
++-------+---------+-----------------+--------+------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from students where name like '%a_';
++--------+---------+------------------+--------+------+------+
+| name   | roll_no | email_id         | gender | cgpa | city |
++--------+---------+------------------+--------+------+------+
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr |
+| Simran | 10017   | aman@gmail.com   | Female | 9.20 | Kota |
++--------+---------+------------------+--------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from students where name like 'a%';
++------+---------+----------------+--------+------+-------+
+| name | roll_no | email_id       | gender | cgpa | city  |
++------+---------+----------------+--------+------+-------+
+| Arun | 10011   | arun@gmail.com | Male   | 8.97 | Angul |
++------+---------+----------------+--------+------+-------+
+1 row in set (0.00 sec)
+
+mysql> select * from students;
++--------+---------+------------------+--------+------+--------+
+| name   | roll_no | email_id         | gender | cgpa | city   |
++--------+---------+------------------+--------+------+--------+
+| Arun   | 10011   | arun@gmail.com   | Male   | 8.97 | Angul  |
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri   |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro   |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr   |
+| Hari   | 10015   | hari@gmail.com   | Male   | 7.80 | Burla  |
+| Shreya | 10016   | shreya@gmail.com | Female | 7.90 | Raipur |
+| Simran | 10017   | aman@gmail.com   | Female | 9.20 | Kota   |
++--------+---------+------------------+--------+------+--------+
+7 rows in set (0.00 sec)
+
+mysql> select * from students where cgpa between 7.90 and 8.70;
++--------+---------+------------------+--------+------+--------+
+| name   | roll_no | email_id         | gender | cgpa | city   |
++--------+---------+------------------+--------+------+--------+
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri   |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro   |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr   |
+| Shreya | 10016   | shreya@gmail.com | Female | 7.90 | Raipur |
++--------+---------+------------------+--------+------+--------+
+4 rows in set (0.00 sec)
+
+mysql> insert into students (roll_no, name, cgpa) values ('10018', 'Arya', 6.34);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from students where roll_no > '10016';
++--------+---------+----------------+--------+------+------+
+| name   | roll_no | email_id       | gender | cgpa | city |
++--------+---------+----------------+--------+------+------+
+| Simran | 10017   | aman@gmail.com | Female | 9.20 | Kota |
+| Arya   | 10018   | NULL           | NULL   | 6.34 | NULL |
++--------+---------+----------------+--------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from students where roll_no = '10018';
++------+---------+----------+--------+------+------+
+| name | roll_no | email_id | gender | cgpa | city |
++------+---------+----------+--------+------+------+
+| Arya | 10018   | NULL     | NULL   | 6.34 | NULL |
++------+---------+----------+--------+------+------+
+1 row in set (0.00 sec)
+
+mysql> update students set email_id='arya@gmail.com', gender='Female' where roll_no='10018';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from students where roll_no = '10018';
++------+---------+----------------+--------+------+------+
+| name | roll_no | email_id       | gender | cgpa | city |
++------+---------+----------------+--------+------+------+
+| Arya | 10018   | arya@gmail.com | Female | 6.34 | NULL |
++------+---------+----------------+--------+------+------+
+1 row in set (0.00 sec)
+
+mysql> update students set cgpa=7.0 where cgpa<7.0;
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from students where roll_no = '10018';
++------+---------+----------------+--------+------+------+
+| name | roll_no | email_id       | gender | cgpa | city |
++------+---------+----------------+--------+------+------+
+| Arya | 10018   | arya@gmail.com | Female | 7.00 | NULL |
++------+---------+----------------+--------+------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from students where city=NULL;
+Empty set (0.00 sec)
+
+mysql> select * from students where city is NULL;
++------+---------+----------------+--------+------+------+
+| name | roll_no | email_id       | gender | cgpa | city |
++------+---------+----------------+--------+------+------+
+| Arya | 10018   | arya@gmail.com | Female | 7.00 | NULL |
++------+---------+----------------+--------+------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from students where city is not NULL;
++--------+---------+------------------+--------+------+--------+
+| name   | roll_no | email_id         | gender | cgpa | city   |
++--------+---------+------------------+--------+------+--------+
+| Arun   | 10011   | arun@gmail.com   | Male   | 8.97 | Angul  |
+| Samar  | 10012   | samar@gmail.com  | Male   | 8.50 | Puri   |
+| Tushar | 10013   | tushar@gmail.com | Male   | 8.70 | Soro   |
+| Sohan  | 10014   | sohan@gmail.com  | Male   | 8.20 | Bbsr   |
+| Hari   | 10015   | hari@gmail.com   | Male   | 7.80 | Burla  |
+| Shreya | 10016   | shreya@gmail.com | Female | 7.90 | Raipur |
+| Simran | 10017   | aman@gmail.com   | Female | 9.20 | Kota   |
++--------+---------+------------------+--------+------+--------+
+7 rows in set (0.00 sec)
+
+mysql> select * from students where city is not NULL;^C
+mysql> delete from students where city is NULL;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from client_master;
++-----------+---------+--------+-------------+---------+----------+
+| client_no | name    | city   | state       | pincode | bal_due  |
++-----------+---------+--------+-------------+---------+----------+
+| 0001      | Ivan    | Bombay | Maharashtra |  400054 | 15000.00 |
+| 0002      | Vandana | Madras | Tamil Nadu  |  780001 |     0.00 |
+| 0003      | Pramada | Bombay | Maharashtra |  400057 |  5000.00 |
+| 0004      | Basu    | Bombay | Maharashtra |  400056 |     0.00 |
+| 0005      | Ravi    | Delhi  | NULL        |  100001 |  2000.00 |
+| 0006      | Rukmini | Bombay | Maharashtra |  400050 |     0.00 |
++-----------+---------+--------+-------------+---------+----------+
+6 rows in set (0.00 sec)
+
+mysql> describe client_master;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| client_no | varchar(6)    | YES  |     | NULL    |       |
+| name      | varchar(20)   | YES  |     | NULL    |       |
+| city      | varchar(15)   | YES  |     | NULL    |       |
+| state     | varchar(15)   | YES  |     | NULL    |       |
+| pincode   | int           | YES  |     | NULL    |       |
+| bal_due   | decimal(10,2) | YES  |     | NULL    |       |
++-----------+---------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> delete from client_master where client_no='0002';
+Query OK, 1 row affected (0.02 sec)
+
+mysql> update client_master set city='Bombay' where client_no='0005';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update client_master set bal_due=1000 where client_no='0001';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from client_master where city like '_a%';
+Empty set (0.00 sec)
+
+mysql> select  name from client_master where name like '_a%';
++------+
+| name |
++------+
+| Basu |
+| Ravi |
++------+
+2 rows in set (0.00 sec)
+
+mysql> update client_master set state='Tamil Nadu', pincode=768003 where client_no='0001';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select name from client_master where state is NULL;
++------+
+| name |
++------+
+| Ravi |
++------+
+1 row in set (0.00 sec)
+
+mysql> select name from client_master where client_no='0006' and pincode=400050;
++---------+
+| name    |
++---------+
+| Rukmini |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select name where state='Maharashtra' or state='Tamil Nadu';
+ERROR 1054 (42S22): Unknown column 'name' in 'field list'
+mysql> select name from client_master where state='Maharashtra' or state='Tamil Nadu';
++---------+
+| name    |
++---------+
+| Ivan    |
+| Pramada |
+| Basu    |
+| Rukmini |
++---------+
+4 rows in set (0.00 sec)
+
+mysql> select client_no, name where bal_due <> 5000;
+ERROR 1054 (42S22): Unknown column 'client_no' in 'field list'
+mysql> select client_no, name from client_master where bal_due <> 5000;
++-----------+---------+
+| client_no | name    |
++-----------+---------+
+| 0001      | Ivan    |
+| 0004      | Basu    |
+| 0005      | Ravi    |
+| 0006      | Rukmini |
++-----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> 
+
