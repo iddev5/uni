@@ -1,0 +1,11 @@
+Study of in-built graphics library functions.
+Implementation of line drawing algorithms.
+Implementation of circle drawing algorithms.
+Implementation of region drawing algorithms.
+Implementation of 2-D Transformations.
+Implementation of line clipping algorithm.
+Implementation of polygon clipping algorithm.
+Implementation of 3-D Transformations.
+Implementation of Curve Generation.
+A mini project to be designed by students using features of computer graphics.
+

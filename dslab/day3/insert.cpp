@@ -9,35 +9,36 @@ typedef struct node {
 
 node* createNode(int new_data) {
   node* new_node = (node*)malloc(sizeof(node));
-new_node->data = new_data;
-new_node->next = NULL;
-return new_node; // Return the newly created node
+  new_node->data = new_data;
+  new_node->next = NULL;
+  return new_node; // Return the newly created node
 }
 
 node* insertAtFront(node* head, int new_data)
 {
-node* new_node = createNode(new_data);
-new_node->next = head;
-return new_node;
+  node* new_node = createNode(new_data);
+  new_node->next = head;
+  return new_node;
 }
 
 node* append(node* head, int new_data) {
-node* new_node = createNode(new_data);
-if (head == NULL) {
-return new_node;
+  node* new_node = createNode(new_data);
+  if (head == NULL) {
+    return new_node;
+  }
+  node* last = head;
+  while (last->next != NULL) {
+    last = last->next;
+  }
+  last->next = new_node;
+  return head; 
 }
-node* last = head;
-while (last->next != NULL) {
-last = last->next;
-}
-last->next = new_node;
-return head; }
 
 node* middle(node* head, int pos, int new_data) {
-node* new_node = createNode(new_data);
-if (head == NULL) {
-return new_node;
-}
+  node* new_node = createNode(new_data);
+  if (head == NULL) {
+    return new_node;
+  }
   if (pos == 0) {
     new_node->next = head;
     return new_node;

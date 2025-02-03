@@ -15,7 +15,7 @@ public:
   virtual void display() = 0;
 };
 
-class Book: Media {
+class Book: public Media {
   int num_pages;
 public:
   Book(string title, int price, int pages):
@@ -32,7 +32,7 @@ public:
   }
 };
 
-class Tape: Media {
+class Tape: public Media {
   int time_playing;
 public:
   Tape(string title, int price, int time):
@@ -68,8 +68,11 @@ int main() {
   Book b(title, price, pages);
   Tape t(title, price, time);
 
-  b.display();
-  t.display();
+  Media *m = &b;
+  m->display();
+
+  m = &t;
+  m->display();
 
   return 0;
 }

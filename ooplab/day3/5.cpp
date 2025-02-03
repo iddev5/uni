@@ -7,7 +7,7 @@ public:
   void getdata() {
     cout << "Enter the number: ";
     cin >> n;
-  }  
+  }
 
   void display() {
     unsigned long fact = 1;

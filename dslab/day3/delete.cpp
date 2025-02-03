@@ -10,9 +10,9 @@ typedef struct node {
 
 node* createNode(int new_data) {
   node* new_node = (node*)malloc(sizeof(node));
-new_node->data = new_data;
-new_node->next = NULL;
-return new_node; // Return the newly created node
+  new_node->data = new_data;
+  new_node->next = NULL;
+  return new_node; // Return the newly created node
 }
 
 node *delete_beginning(node* head)
