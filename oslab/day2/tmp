@@ -1,0 +1,8 @@
+#!/bin/bash
+filename=$1
+while read line; do
+echo $line >> $filename.tmp
+i=$(( $i + 1 ))
+
+echo "All even lines have been removed from $filename"
+echo "After removing, new file content is: "
