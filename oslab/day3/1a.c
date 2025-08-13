@@ -51,7 +51,7 @@ int main() {
         scanf("%d %d", &AT[i], &BT[i]);
     }
 
-    printf("\n%s\t%s\t%s\t%s\t%s\t%s\t%s\n", "P#", "AT", "BT", "ST", "CT", "TAT", "WT");
+    printf("\nP#\tAT\tBT\tST\tCT\tTAT\tWT\n");
     fcfs(n, AT, BT);
 
     return 0;

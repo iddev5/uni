@@ -1,20 +1,18 @@
 #include <stdio.h>
 #include <stdint.h>
 
-void sjf(int n, int *AT, int *BT) {
+void priority_scheduling(int n, int *AT, int *BT, int *P) {
     int completed[50] = {0};
-    int current_time = 0;
-    int completed_count = 0;
-    float total_WT = 0, total_TAT = 0;
+    int current_time = 0, completed_count = 0;
+    float total_TAT = 0, total_WT = 0;
 
     while (completed_count < n) {
-        int idx = -1;
-        int min_BT = INT32_MAX;
+        int idx = -1, min_P = INT32_MAX;
 
         for (int i = 0; i < n; i++) {
             if (!completed[i] && AT[i] <= current_time) {
-                if (BT[i] < min_BT) {
-                    min_BT = BT[i];
+                if (P[i] < min_P) {
+                    min_P = P[i];
                     idx = i;
                 }
             }
@@ -40,10 +38,9 @@ void sjf(int n, int *AT, int *BT) {
         total_TAT += TAT;
 
         printf("P%d\t%d\t%d\t%d\t%d\t%d\t%d\n", idx + 1, AT[idx], BT[idx], ST, CT, TAT, WT);
-
         current_time = CT;
-        completed[idx] = 1;
         completed_count++;
+        completed[idx] = 1;
     }
 
     printf("\nAverage TAT = %.2f", total_TAT / n);
@@ -55,14 +52,14 @@ int main() {
     printf("Enter number of processes: ");
     scanf("%d", &n);
 
-    int AT[n], BT[n];
+    int AT[n], BT[n], P[n];
     for (int i = 0; i < n; i++) {
-        printf("Enter AT and BT for P%d: ", i + 1);
-        scanf("%d %d", &AT[i], &BT[i]);
+        printf("Enter AT, BT and priority of P%d: ", i+1);
+        scanf("%d %d %d", &AT[i], &BT[i], &P[i]);
     }
 
     printf("\nP#\tAT\tBT\tST\tCT\tTAT\tWT\n");
-    sjf(n, AT, BT);
+    priority_scheduling(n, AT, BT, P);
 
     return 0;
 }
