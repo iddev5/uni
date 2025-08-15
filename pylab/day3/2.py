@@ -6,16 +6,14 @@
 # else:
 #     print(elem, 'does not exists')
 
-mylist = [8, 23, 56, 9, 50, 21, 24]
+mylist = [8, 23, 56, 9, 51, 21, 24]
 
 i, largest, second = 0, 0, 0
-while i < len(mylist):
+for i in range(len(mylist)):
     if mylist[i] > mylist[largest]:
+        second = largest
         largest = i
-    else:
-        if mylist[i] > mylist[second]:
-            second = i
-
-    i += 1
+    elif mylist[i] > mylist[second]:
+        second = i
 
 print('Second largest element is:', mylist[second])

@@ -1,4 +1,5 @@
-mylist = ['apple', 'banana', 'carrot', 'gdp', 'test', 'experiment', 'seven', 'stop', 'ppp']
+mylist = ['apple', 'banana', 'carrot', 'gdp', 'test', 'experiment', 
+          'seven', 'stop', 'ppp']
 
 for elem in mylist:
     test = False
