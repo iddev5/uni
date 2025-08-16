@@ -1,0 +1,14 @@
+#!/bin/sh
+
+mkdir -p dist
+gcc $1 -o dist/$1.out -g
+
+pushd dist > /dev/null
+
+if [ "$2" == 'debug' ]; then
+	gdb $1.out
+else
+	./$1.out
+fi
+	
+popd > /dev/null
