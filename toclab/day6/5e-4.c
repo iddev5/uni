@@ -13,8 +13,7 @@ int dfa(char *string) {
   int state = q0; 
 
   for (int i = 0; i < (int)strlen(string); ++i) {
-    int a = (string[i] = '0');
-
+    int a = (string[i] == '0');
     switch (state) {
       case q0:  state = a ? q1  : q2 ; break;
       case q1:  state = a ? q1  : q3 ; break;
