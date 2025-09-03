@@ -3,10 +3,10 @@ from tkinter import ttk
 import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import heapq, time, threading
+import heapq
 
 JUG1_CAPACITY, JUG2_CAPACITY, START, GOAL = 4, 3, (0, 0), (2, 0)
-node_info, frontier, explored, parent, G = {}, [], set(), {}, nx.DiGraph()
+node_info, open, closed, parent, G = {}, [], set(), {}, nx.DiGraph()
 auto_running, goal_found = False, False
 
 def heuristic(state): return abs(state[0] - GOAL[0]) + abs(state[1] - GOAL[1])
@@ -17,29 +17,29 @@ def get_successors(state):
     return {(JUG1_CAPACITY, b), (a, JUG2_CAPACITY), (0, b), (a, 0), (a - pour1, b + pour1), (a + pour2, b - pour2)}
 
 def reset_search():
-    global frontier, explored, parent, G, node_info, goal_found, auto_running
-    frontier, explored, parent, node_info = [], set(), {}, {}
+    global open, closed, parent, G, node_info, goal_found, auto_running
+    open, closed, parent, node_info = [], set(), {}, {}
     G.clear()
     goal_found, auto_running = False, False
     g, h, f = 0, heuristic(START), heuristic(START)
     node_info[START], parent[START] = (g, h, f), None
-    heapq.heappush(frontier, (f, g, START))
+    heapq.heappush(open, (f, g, START))
     draw_graph()
     update_text_panel()
 
 def step_search():
     global goal_found, auto_running
-    if not frontier or goal_found: return
-    f, g, current = heapq.heappop(frontier)
-    explored.add(current)
+    if not open or goal_found: return
+    f, g, current = heapq.heappop(open)
+    closed.add(current)
     if current == GOAL:
         highlight_path()
         goal_found, auto_running = True, False
         return
     for succ in get_successors(current):
-        if succ not in explored:
+        if succ not in closed:
             new_g, new_h, new_f = g + 1, heuristic(succ), g + 1 + heuristic(succ)
-            heapq.heappush(frontier, (new_f, new_g, succ))
+            heapq.heappush(open, (new_f, new_g, succ))
             if succ not in parent:
                 parent[succ], node_info[succ] = current, (new_g, new_h, new_f)
                 G.add_edge(current, succ)
@@ -47,15 +47,15 @@ def step_search():
     update_text_panel()
 
 def auto_step():
-    while auto_running:
+    if auto_running and not goal_found:
         step_search()
-        time.sleep(0.5)
+        root.after(500, auto_step)
 
 def start_auto():
     global auto_running
     if not auto_running:
         auto_running = True
-        threading.Thread(target=auto_step, daemon=True).start()
+        auto_step()
 
 def stop_auto(): global auto_running; auto_running = False
 
@@ -79,7 +79,7 @@ def draw_graph(current=None):
     ax.clear()
     if START not in G.nodes(): G.add_node(START)
     pos = get_tree_pos(G, START)
-    node_colors = ["yellow" if node == current else "lightblue" if node in explored else "white" for node in G.nodes()]
+    node_colors = ["yellow" if node == current else "lightblue" if node in closed else "white" for node in G.nodes()]
     labels = {n: f"{n}\ng={g}, h={h}, f={f}" for n, (g, h, f) in node_info.items()}
     nx.draw(G, pos, ax=ax, with_labels=True, labels=labels, node_color=node_colors, node_size=1500, font_size=8)
     canvas.draw()
@@ -99,11 +99,11 @@ def highlight_path():
 def update_text_panel():
     text_widget.delete("1.0", tk.END)
     text_widget.insert(tk.END, "OPEN LIST:\n")
-    for f, g, node in sorted(frontier):
+    for f, g, node in sorted(open):
         g, h, f = node_info.get(node, (g, heuristic(node), f))
         text_widget.insert(tk.END, f"{node} -> g={g}, h={h}, f={f}\n")
     text_widget.insert(tk.END, "\nCLOSED LIST:\n")
-    for node in explored:
+    for node in closed:
         g, h, f = node_info.get(node, ("?", "?", "?"))
         text_widget.insert(tk.END, f"{node} -> g={g}, h={h}, f={f}\n")
 

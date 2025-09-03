@@ -66,7 +66,7 @@ def step():
         pred[start] = None
         log.insert(tk.END, f"\n--- Depth limit = {depth_limit} ---\n")
 
-    node = frontier.pop(0)
+    node = frontier.pop()
     current_node = node
     log.insert(tk.END, f"Visited: {node}\n")
     log.see(tk.END)
