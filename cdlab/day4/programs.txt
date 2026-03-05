@@ -1,0 +1,7 @@
+1. Write a lex specification file to count alphabets, digits, whitespace, special characters and no. of lines
+
+2. write a lex file to check a valid identifier
+
+3. write a lex file to count no of words
+
+4. write a lex file to identify key words in a C source file
